@@ -254,8 +254,8 @@ body::before {
   grid-template-columns: 340px 1fr 1fr 1fr 1fr;
   grid-template-rows: 1fr 1fr 0.85fr;
   grid-template-areas:
-    "side chart1  chart1  chart2  chart2"
-    "side chart3  chart3  chart3  chart3"
+    "side charts  charts  charts  charts"
+    "side charts  charts  charts  charts"
     "side regret  table   table   table";
   gap: 12px;
 }
@@ -562,10 +562,37 @@ body.bankrupt .bankrupt-banner { display: block; }
   display: flex;
   flex-direction: column;
 }
-.card.chart1 { grid-area: chart1; }
-.card.chart2 { grid-area: chart2; }
-.card.chart3 { grid-area: chart3; }
+.card.charts { grid-area: charts; }
 .card.tablecard { grid-area: table; }
+
+/* combined-charts toggle + swappable views */
+.chart-toggle {
+  display: flex;
+  border: 2px solid var(--color-accent);
+  border-radius: 7px;
+  overflow: hidden;
+  margin: 0 0 10px;
+  flex: 0 0 auto;
+}
+.chart-toggle label {
+  flex: 1 1 0;
+  text-align: center;
+  padding: 5px 8px;
+  font-size: 0.74rem;
+  line-height: 1.15;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  user-select: none;
+  background: transparent;
+  transition: background 0.12s, color 0.12s;
+}
+.chart-toggle input { position: absolute; opacity: 0; pointer-events: none; }
+.chart-toggle label:has(input:checked) { background: var(--color-accent); color: var(--color-text); }
+
+.chart-view { display: none; flex: 1 1 auto; min-height: 0; flex-direction: column; }
+.chart-view.is-active { display: flex; }
 .card h3 {
   font-family: var(--font-data);
   font-weight: 600;

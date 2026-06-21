@@ -83,6 +83,13 @@ export function initCharts() {
   });
 }
 
+// Charts created inside a hidden (display:none) container render at zero size;
+// call this when a view becomes visible so Chart.js re-measures the canvas.
+export function resizeChart(key) {
+  const chart = { conv: convChart, arm: armChart, bank: bankChart }[key];
+  if (chart) chart.resize();
+}
+
 export function renderCharts(state) {
   const labels = state.history.map(h => h.day);
   convChart.data.labels = labels;
