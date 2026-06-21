@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Samuel Duffy — Résumé</title>
-<meta name="description" content="Résumé of Samuel Duffy — [role], covering skills, experience, and education.">
+<title>Sam Duffy — Résumé</title>
+<meta name="description" content="Résumé of Sam Duffy — Quantitative Developer, covering skills, experience, and education.">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -156,6 +156,9 @@ section { margin-top: 18px; }
   border-bottom: 2px solid var(--rule);
 }
 
+/* ---------- summary ---------- */
+.summary { font-size: 0.92rem; color: var(--ink-soft); margin: 0; }
+
 /* ---------- skills ---------- */
 .skill-line { font-size: 0.9rem; color: var(--ink-soft); margin: 0 0 4px; }
 .skill-line:last-child { margin-bottom: 0; }
@@ -237,21 +240,25 @@ section { margin-top: 18px; }
 <main class="sheet">
 
   <header class="cv-header">
-    <h1>Samuel Duffy</h1>
+    <h1>Sam Duffy</h1>
+    <div class="role">Quantitative Developer</div>
     <div class="contact">
-      [+1 XXX XXX XXXX]
+      <a href="tel:+12672272041">(267) 227-2041</a>
       <span class="sep">·</span>
       <a href="mailto:duffy.samuel.m@gmail.com">duffy.samuel.m@gmail.com</a>
-      <span class="sep">·</span>
-      <a href="[portfolio URL]">[portfolio URL]</a>
     </div>
   </header>
 
   <section>
+    <h2 class="section-title">Summary</h2>
+    <p class="summary">Quantitative developer with seven years of combined experience in applying Machine Learning and Statistics across Financial Market and Defense domains.</p>
+  </section>
+
+  <section>
     <h2 class="section-title">Skills</h2>
-    <p class="skill-line"><b>Programming Languages:</b> [e.g. JavaScript/TypeScript, Python, SQL]</p>
-    <p class="skill-line"><b>Frameworks &amp; Tools:</b> [e.g. React, Node, Chart.js, Git]</p>
-    <p class="skill-line"><b>Cloud &amp; Data:</b> [e.g. AWS, Docker, PostgreSQL]</p>
+    <p class="skill-line"><b>Languages:</b> Python, Q, SQL, KDB, MATLAB</p>
+    <p class="skill-line"><b>Data &amp; Tools:</b> Tableau, Azure Blob Storage, Bloomberg Data License</p>
+    <p class="skill-line"><b>Platforms &amp; Methods:</b> Linux, Kubernetes, Optimization, Statistics, Applied Machine Learning</p>
   </section>
 
   <section>
@@ -259,36 +266,64 @@ section { margin-top: 18px; }
 
     <div class="job">
       <div class="job-head">
-        <span class="job-title"><b>[Job Title]</b>, [Company] — [Location]</span>
-        <span class="job-dates">[Mon YYYY] – Present</span>
+        <span class="job-title"><b>Quantitative Trading Associate — Systematic Execution Team</b>, MFS Investment Management — Boston, MA</span>
+        <span class="job-dates">Apr 2023 – Present</span>
       </div>
       <ul>
-        <li>[Accomplishment with a measurable result — start with an action verb, quantify the impact.]</li>
-        <li>[Accomplishment — what you built/led, the tech or method, and the outcome.]</li>
-        <li>[Accomplishment — scope, scale, or business impact.]</li>
+        <li>Spearheaded a custom implementation of KDB Insights, using Python, Q, and Kubernetes to process internal order models and TAQ data of 15,000 securities into KDB.</li>
+        <li>Collaborated with portfolio managers and traders to provide actionable insights on the trading cost impact of order decisions, broker toolkits, and global security selection.</li>
+        <li>Leveraged statistics to create a multi-faceted Algo Wheel optimizer to reduce the trading cost of the systematic order flow.</li>
+        <li>Derived a closed-form solution for the Algo Wheel true-up process, reducing monthly allocation error to below the 5th percentile of the previous solution when validated with Monte-Carlo simulations.</li>
+        <li>Developed an internal Impact Cost Model for equities.</li>
       </ul>
     </div>
 
     <div class="job">
       <div class="job-head">
-        <span class="job-title"><b>[Job Title]</b>, [Company] — [Location]</span>
-        <span class="job-dates">[Mon YYYY] – [Mon YYYY]</span>
+        <span class="job-title"><b>Senior Software Engineer — Trading Data Analytics Team</b>, MFS Investment Management — Boston, MA</span>
+        <span class="job-dates">Dec 2021 – Apr 2023</span>
       </div>
       <ul>
-        <li>[Accomplishment with a measurable result.]</li>
-        <li>[Accomplishment.]</li>
-        <li>[Accomplishment.]</li>
+        <li>Created complex Tableau dashboards to give equity traders insight into broker algo performance.</li>
+        <li>Developed internal Python libraries to enable rapid prototyping and development of various model pipelines with optional features like bootstrapping, bagging, and stratified sampling.</li>
+        <li>Developed Python libraries to extract EMS execution and order data via API endpoints.</li>
+        <li>Created a custom job scheduler to automate all daily, weekly, and monthly jobs for the TDA Team.</li>
+        <li>Used KNN clustering and stratified resampling to compare broker performance across diverse order flows.</li>
       </ul>
     </div>
 
     <div class="job">
       <div class="job-head">
-        <span class="job-title"><b>[Job Title]</b>, [Company] — [Location]</span>
-        <span class="job-dates">[Mon YYYY] – [Mon YYYY]</span>
+        <span class="job-title"><b>Machine Learning Engineer</b>, Raytheon Missile &amp; Defense — Tewksbury, MA</span>
+        <span class="job-dates">Feb 2021 – Dec 2021</span>
       </div>
       <ul>
-        <li>[Accomplishment.]</li>
-        <li>[Accomplishment.]</li>
+        <li>Led a team of engineers to integrate several custom machine learning models to detect anomalous flight patterns for air traffic controllers.</li>
+        <li>Used TensorFlow and Keras to develop a custom TadGAN machine learning model and training functions for each of its networks.</li>
+      </ul>
+    </div>
+
+    <div class="job">
+      <div class="job-head">
+        <span class="job-title"><b>Systems Engineer — PATRIOT Surveillance Radar</b>, Raytheon Missile &amp; Defense — Tewksbury, MA</span>
+        <span class="job-dates">Jun 2020 – Dec 2021</span>
+      </div>
+      <ul>
+        <li>Developed a suite of tools for rapid data extraction, display, and analysis using OOP techniques.</li>
+        <li>Completed root-cause analysis of defects spanning all parts of the PATRIOT Surveillance systems.</li>
+        <li>Led the test team of an internal Radar &amp; Missile Simulation project, designing and executing the functional requirement test plans.</li>
+        <li>Automated the annual verification process of complex functional requirements, reducing weeks of analysis to under a minute.</li>
+      </ul>
+    </div>
+
+    <div class="job">
+      <div class="job-head">
+        <span class="job-title"><b>Distinguished Undergraduate Researcher</b>, The Applied Research Lab — State College, PA</span>
+        <span class="job-dates">May 2018 – May 2020</span>
+      </div>
+      <ul>
+        <li>Completed a thesis on applied swarm intelligence, documenting multi-modular neural network architectures, meta-heuristic optimization algorithms, and multi-agent systems.</li>
+        <li>Developed an original algorithm to model the stalk-and-ambush hunting behavior of lions for multi-predator, single-prey scenarios.</li>
       </ul>
     </div>
   </section>
@@ -298,23 +333,12 @@ section { margin-top: 18px; }
 
     <div class="edu">
       <div class="edu-row top">
-        <b>[University]</b>
-        <span class="date">[Mon YYYY]</span>
+        <b>The Pennsylvania State University</b>
+        <span class="date">Spring 2020</span>
       </div>
       <div class="edu-row sub">
-        <span>[Degree] in [Field]</span>
-        <span class="grade">[Grade / GPA / Honors]</span>
-      </div>
-    </div>
-
-    <div class="edu">
-      <div class="edu-row top">
-        <b>[University]</b>
-        <span class="date">[Mon YYYY]</span>
-      </div>
-      <div class="edu-row sub">
-        <span>[Degree] in [Field]</span>
-        <span class="grade">[Grade / GPA / Honors]</span>
+        <span>B.S. in Mechanical Engineering — University Park, PA</span>
+        <span class="grade">GPA 3.48</span>
       </div>
     </div>
   </section>
