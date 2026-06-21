@@ -1,0 +1,952 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Multi-Armed Bandit Demo — Marketing Optimization Simulator</title>
+<meta name="description" content="An interactive demo of multi-armed bandit algorithms (epsilon-greedy &amp; Thompson Sampling) that automatically shift marketing spend toward the best-converting campaign — shown through a B2B toaster sales scenario.">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Alfa+Slab+One&family=Caveat:wght@600;700&family=Oswald:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+
+<style>
+/* =====================================================================
+   DESIGN SYSTEM — Vintage Poster / Comic Cell  (all knobs live here)
+   ===================================================================== */
+:root {
+  --color-bg: #1C2E2A;        /* Deep Vintage Teal — primary background */
+  --color-panel: #223C36;     /* Slightly lifted teal — card fills */
+  --color-accent: #9E2A2B;    /* Rust / Crimson — accent */
+  --color-text: #FFF3D1;      /* Aged Cream / Parchment — base text */
+  --color-charcoal: #212529;  /* Off-Black / Charcoal — contrast */
+
+  --border-width: 3px;
+  --shadow-offset: 5px;
+
+  /* Chart-safe palette (on-palette but distinguishable) */
+  --chart-cream: #FFF3D1;
+  --chart-gold:  #D9A441;
+  --chart-sage:  #7BA68A;
+  --chart-rust:  #C7423F;
+
+  --font-display: 'Alfa Slab One', Georgia, serif;
+  --font-data: 'Oswald', 'Arial Narrow', sans-serif;
+  --font-script: 'Caveat', cursive;
+}
+
+* { box-sizing: border-box; }
+
+html { font-size: 18px; }           /* bumped base type scale */
+html, body { margin: 0; padding: 0; }
+
+body {
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-data);
+  font-weight: 400;
+  line-height: 1.45;
+  -webkit-font-smoothing: antialiased;
+  position: relative;
+  /* fixed-height dashboard: fill the viewport, no page scroll on desktop */
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  padding: 12px 16px;
+  gap: 12px;
+}
+
+/* Faint paper / noise texture — page background only, CSS-generated, no asset file */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.05;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* ---------- shared poster panel: double frame + hard offset shadow ---------- */
+.panel {
+  position: relative;
+  background: var(--color-panel);
+  border: var(--border-width) solid var(--color-charcoal);
+  box-shadow:
+    inset 0 0 0 3px var(--color-text),
+    var(--shadow-offset) var(--shadow-offset) 0 var(--color-charcoal);
+  border-radius: 10px;
+}
+
+/* =====================================================================
+   TOP BAR — compact hero + intro + byline on one band
+   ===================================================================== */
+.topbar {
+  position: relative;
+  z-index: 1;
+  flex: 0 0 auto;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 18px;
+  background: var(--color-accent);
+  color: var(--color-text);
+  border: var(--border-width) solid var(--color-charcoal);
+  box-shadow:
+    inset 0 0 0 3px var(--color-text),
+    var(--shadow-offset) var(--shadow-offset) 0 var(--color-charcoal);
+  border-radius: 12px;
+  padding: 12px 20px;
+}
+.topbar .brand h1 {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(1.2rem, 2.2vw, 1.85rem);
+  line-height: 1.05;
+  margin: 0;
+  letter-spacing: 0.01em;
+  text-shadow: 2px 2px 0 var(--color-charcoal);
+  white-space: nowrap;
+}
+.topbar .brand .tagline {
+  font-family: var(--font-script);
+  font-size: clamp(1rem, 1.6vw, 1.35rem);
+  font-weight: 700;
+  display: inline-block;
+  transform: rotate(-2deg);
+}
+.topbar .intro {
+  font-size: 0.92rem;
+  font-weight: 400;
+  line-height: 1.35;
+  margin: 0;
+  max-width: 70ch;
+}
+.topbar .intro b { font-weight: 600; color: #FFE9A8; }
+.byline {
+  font-size: 0.78rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  font-weight: 500;
+  text-align: right;
+  white-space: nowrap;
+}
+.byline a { color: var(--color-text); text-decoration: underline; text-underline-offset: 3px; }
+.byline a:hover { color: #FFE9A8; }
+
+/* =====================================================================
+   DASHBOARD GRID — fills remaining viewport height
+   ===================================================================== */
+.dash {
+  position: relative;
+  z-index: 1;
+  flex: 1 1 auto;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: 340px 1fr 1fr;
+  grid-template-rows: 1.1fr 0.9fr;
+  grid-template-areas:
+    "side chart1 chart2"
+    "side table  table";
+  gap: 12px;
+}
+
+/* ---------- left sidebar: controls + regret stacked ---------- */
+.side {
+  grid-area: side;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  overflow-y: auto;
+}
+
+/* ---------- section headings ---------- */
+.section-title {
+  font-family: var(--font-data);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-size: 0.92rem;
+  margin: 0 0 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.section-title small {
+  font-family: var(--font-script);
+  text-transform: none;
+  letter-spacing: 0;
+  font-size: 1.05rem;
+  font-weight: 600;
+  opacity: 0.85;
+}
+.section-title .star { width: 16px; height: 16px; }
+
+/* ---------- controls ---------- */
+.controls { padding: 14px 16px; }
+.control-block { margin-bottom: 14px; }
+.control-block:last-child { margin-bottom: 0; }
+.control-block label.lbl {
+  display: block;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-size: 0.8rem;
+  margin-bottom: 7px;
+}
+.control-block .val {
+  font-weight: 600;
+  color: var(--chart-gold);
+}
+
+/* algorithm selector as a vertical segmented toggle */
+.algo-toggle {
+  display: flex;
+  flex-direction: column;
+  border: var(--border-width) solid var(--color-charcoal);
+  border-radius: 8px;
+  overflow: hidden;
+}
+.algo-toggle label {
+  text-align: center;
+  padding: 9px 6px;
+  font-weight: 500;
+  font-size: 0.92rem;
+  cursor: pointer;
+  background: var(--color-bg);
+  border-bottom: 2px solid var(--color-charcoal);
+  user-select: none;
+  transition: background 0.12s, color 0.12s;
+}
+.algo-toggle label:last-child { border-bottom: none; }
+.algo-toggle input { position: absolute; opacity: 0; pointer-events: none; }
+.algo-toggle label:has(input:checked) {
+  background: var(--color-accent);
+  color: var(--color-text);
+  font-weight: 600;
+}
+
+/* range sliders */
+input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 8px;
+  background: var(--color-bg);
+  border: 2px solid var(--color-charcoal);
+  border-radius: 6px;
+  outline: none;
+  cursor: pointer;
+}
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--chart-gold);
+  border: 3px solid var(--color-charcoal);
+  cursor: pointer;
+}
+input[type="range"]::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--chart-gold);
+  border: 3px solid var(--color-charcoal);
+  cursor: pointer;
+}
+.control-block.disabled { opacity: 0.4; }
+.control-block.disabled input[type="range"] { cursor: not-allowed; }
+.hint {
+  font-size: 0.76rem;
+  opacity: 0.72;
+  margin-top: 6px;
+  font-weight: 400;
+  line-height: 1.3;
+}
+
+/* buttons */
+.btn-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+button.btn {
+  font-family: var(--font-data);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  font-size: 0.85rem;
+  color: var(--color-text);
+  background: var(--color-charcoal);
+  border: var(--border-width) solid var(--color-charcoal);
+  box-shadow: 3px 3px 0 rgba(0,0,0,0.45);
+  border-radius: 8px;
+  padding: 9px 12px;
+  cursor: pointer;
+  flex: 1 1 auto;
+  transition: transform 0.05s, box-shadow 0.05s;
+}
+button.btn.primary { background: var(--color-accent); }
+button.btn:hover { transform: translate(1px, 1px); box-shadow: 2px 2px 0 rgba(0,0,0,0.45); }
+button.btn:active { transform: translate(3px, 3px); box-shadow: 0 0 0 rgba(0,0,0,0.45); }
+
+/* reveal toggle */
+.reveal-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.switch { position: relative; display: inline-block; width: 50px; height: 26px; flex: 0 0 auto; }
+.switch input { opacity: 0; width: 0; height: 0; }
+.slider-sw {
+  position: absolute; inset: 0;
+  background: var(--color-bg);
+  border: 2px solid var(--color-charcoal);
+  border-radius: 26px;
+  transition: 0.15s;
+  cursor: pointer;
+}
+.slider-sw::before {
+  content: "";
+  position: absolute;
+  height: 18px; width: 18px;
+  left: 3px; top: 2px;
+  background: var(--color-text);
+  border-radius: 50%;
+  transition: 0.15s;
+}
+.switch input:checked + .slider-sw { background: var(--color-accent); }
+.switch input:checked + .slider-sw::before { transform: translateX(22px); }
+
+/* ---------- regret callout ---------- */
+.regret {
+  text-align: center;
+  background: var(--color-charcoal);
+  border: var(--border-width) solid var(--color-charcoal);
+  box-shadow:
+    inset 0 0 0 3px var(--color-accent),
+    var(--shadow-offset) var(--shadow-offset) 0 var(--color-charcoal);
+  padding: 12px 14px;
+  flex: 0 0 auto;
+}
+.regret .regret-flank {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+}
+.regret .star { width: 24px; height: 24px; background: var(--color-accent); }
+.regret-label {
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-weight: 600;
+  font-size: 0.82rem;
+  opacity: 0.85;
+}
+.regret-value {
+  font-family: var(--font-data);
+  font-weight: 700;
+  font-size: clamp(2.2rem, 4vw, 3.2rem);
+  line-height: 1;
+  color: var(--chart-gold);
+  margin: 2px 0;
+}
+.regret-sub { font-weight: 400; font-size: 0.82rem; line-height: 1.3; margin: 6px auto 0; opacity: 0.92; }
+.regret-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px 14px;
+  margin-top: 12px;
+  font-size: 0.82rem;
+  text-align: left;
+  opacity: 0.92;
+}
+.regret-stats b { color: var(--color-text); font-weight: 600; }
+
+/* ---------- four-point star (decorative chrome) ---------- */
+.star {
+  width: 20px;
+  height: 20px;
+  background: var(--chart-gold);
+  clip-path: polygon(50% 0%, 61% 39%, 100% 50%, 61% 61%, 50% 100%, 39% 61%, 0% 50%, 39% 39%);
+  flex: 0 0 auto;
+}
+
+/* ---------- chart cards ---------- */
+.card {
+  background: var(--color-panel);
+  border: 2px solid var(--color-charcoal);
+  border-radius: 10px;
+  box-shadow: 4px 4px 0 var(--color-charcoal);
+  padding: 12px 14px 10px;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+.card.chart1 { grid-area: chart1; }
+.card.chart2 { grid-area: chart2; }
+.card.tablecard { grid-area: table; }
+.card h3 {
+  font-family: var(--font-data);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-size: 0.9rem;
+  margin: 0 0 2px;
+}
+.card p.cap { font-size: 0.78rem; opacity: 0.74; margin: 0 0 8px; font-weight: 400; line-height: 1.25; }
+.chart-box { position: relative; flex: 1 1 auto; min-height: 0; width: 100%; }
+
+/* ---------- table ---------- */
+.tablecard { overflow: auto; }
+table.summary {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.95rem;
+}
+table.summary th, table.summary td {
+  padding: 9px 10px;
+  text-align: right;
+  border-bottom: 2px solid rgba(255,243,209,0.18);
+}
+table.summary th {
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  font-size: 0.8rem;
+  border-bottom: 3px solid var(--color-text);
+  position: sticky;
+  top: 0;
+  background: var(--color-panel);
+}
+table.summary th:first-child, table.summary td:first-child { text-align: left; }
+table.summary td.campaign { font-weight: 500; }
+table.summary .swatch {
+  display: inline-block;
+  width: 13px; height: 13px;
+  border: 2px solid var(--color-charcoal);
+  margin-right: 8px;
+  vertical-align: middle;
+}
+table.summary tr.leader td { background: rgba(217,164,65,0.12); }
+table.summary tr.leader td:first-child::after {
+  content: " ★";
+  color: var(--chart-gold);
+}
+.true-col { display: none; }
+body.reveal .true-col { display: table-cell; }
+.num { font-variant-numeric: tabular-nums; }
+
+/* =====================================================================
+   RESPONSIVE — below this size, fall back to a normal scrolling column
+   (fitting everything with readable type isn't possible on small screens)
+   ===================================================================== */
+@media (max-width: 1024px), (max-height: 600px) {
+  body { height: auto; overflow: auto; display: block; padding: 14px; }
+  .topbar { grid-template-columns: 1fr; text-align: center; gap: 8px; margin-bottom: 12px; }
+  .topbar .intro { max-width: none; }
+  .byline { text-align: center; }
+  .dash {
+    display: block;
+  }
+  .side { display: block; overflow: visible; }
+  .controls, .regret { margin-bottom: 12px; }
+  .card { margin-bottom: 12px; }
+  .chart-box { height: 300px; flex: none; }
+  .tablecard { overflow-x: auto; }
+}
+</style>
+</head>
+<body class="">
+
+  <!-- TOP BAR -->
+  <header class="topbar">
+    <div class="brand">
+      <h1>🍞 The Toaster Co.</h1>
+      <span class="tagline">teaching your ad budget to think for itself</span>
+    </div>
+    <p class="intro">
+      We sell commercial toasters and run four marketing campaigns at once. A
+      <b>multi-armed bandit</b> automatically shifts spend toward whatever is working
+      right now — instead of splitting budget evenly and waiting for a quarterly report.
+      Press <b>Play</b> and watch it discover the best campaign on its own.
+    </p>
+    <div class="byline">Built by <a href="[portfolio URL]">[Your Name]</a></div>
+  </header>
+
+  <!-- DASHBOARD -->
+  <main class="dash">
+
+    <!-- SIDEBAR: controls + regret -->
+    <div class="side">
+
+      <section class="panel controls" aria-label="Simulation controls">
+        <h2 class="section-title"><span class="star"></span>Control Panel <small>turn the dials</small></h2>
+
+        <div class="control-block">
+          <label class="lbl">Algorithm</label>
+          <div class="algo-toggle" id="algoToggle">
+            <label><input type="radio" name="algo" value="thompson" checked><span>Thompson Sampling</span></label>
+            <label><input type="radio" name="algo" value="epsilon"><span>Epsilon-Greedy</span></label>
+            <label><input type="radio" name="algo" value="ab"><span>Static A/B Test</span></label>
+          </div>
+          <div class="hint">Changing the algorithm or epsilon restarts the bandit's learning. The A/B baseline always runs alongside for comparison.</div>
+        </div>
+
+        <div class="control-block" id="epsilonBlock">
+          <label class="lbl">Epsilon (explore rate) — <span class="val" id="epsilonVal">0.10</span></label>
+          <input type="range" id="epsilonSlider" min="0" max="1" step="0.01" value="0.1">
+          <div class="hint">How often Epsilon-Greedy tries a random campaign.</div>
+        </div>
+
+        <div class="control-block">
+          <label class="lbl">Leads per day — <span class="val" id="leadsVal">50</span></label>
+          <input type="range" id="leadsSlider" min="10" max="500" step="10" value="50">
+        </div>
+
+        <div class="control-block">
+          <label class="lbl">Speed — <span class="val" id="speedVal">5</span> days/sec</label>
+          <input type="range" id="speedSlider" min="1" max="20" step="1" value="5">
+        </div>
+
+        <div class="control-block">
+          <div class="btn-row">
+            <button class="btn primary" id="playBtn">▶ Play</button>
+            <button class="btn" id="stepBtn">⏭ Step</button>
+            <button class="btn" id="resetBtn">⟲ Reset</button>
+          </div>
+        </div>
+
+        <div class="control-block">
+          <div class="reveal-row">
+            <label class="switch">
+              <input type="checkbox" id="revealToggle">
+              <span class="slider-sw"></span>
+            </label>
+            <span class="lbl" style="margin:0;">Reveal true rates</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel regret" aria-label="Cumulative regret">
+        <div class="regret-flank">
+          <span class="star"></span>
+          <div>
+            <div class="regret-label">Cumulative Regret</div>
+            <div class="regret-value num" id="regretValue">0</div>
+          </div>
+          <span class="star"></span>
+        </div>
+        <p class="regret-sub">Leads we lost by not always picking the best campaign. Lower is better — a smart bandit keeps it nearly flat.</p>
+        <div class="regret-stats">
+          <span>Day <b class="num" id="statDay">0</b></span>
+          <span>Leads served <b class="num" id="statLeads">0</b></span>
+          <span>Bandit conv. <b class="num" id="statBanditConv">0</b></span>
+          <span>A/B conv. <b class="num" id="statAbConv">0</b></span>
+        </div>
+      </section>
+
+    </div>
+
+    <!-- CHART 1 -->
+    <div class="card chart1">
+      <h3>Cumulative Conversions</h3>
+      <p class="cap">Selected bandit vs. a static A/B test on the same lead stream. The gap is the bandit's edge.</p>
+      <div class="chart-box"><canvas id="convChart"></canvas></div>
+    </div>
+
+    <!-- CHART 2 -->
+    <div class="card chart2">
+      <h3>Where the Budget Goes</h3>
+      <p class="cap">Share of daily leads sent to each campaign. Watch it converge on the winner.</p>
+      <div class="chart-box"><canvas id="armChart"></canvas></div>
+    </div>
+
+    <!-- TABLE -->
+    <div class="card tablecard">
+      <h3>Campaign Scoreboard</h3>
+      <table class="summary">
+        <thead>
+          <tr>
+            <th>Campaign</th>
+            <th>Times Shown</th>
+            <th>Conversions</th>
+            <th>Est. Conv. Rate</th>
+            <th class="true-col">True Rate</th>
+          </tr>
+        </thead>
+        <tbody id="tableBody"></tbody>
+      </table>
+    </div>
+
+  </main>
+
+<script>
+/* =====================================================================
+   1. SIMULATION CORE  (pure functions — no DOM access)
+   ===================================================================== */
+
+const ARMS = [
+  { name: "LinkedIn Ad",          pitch: "Cut kitchen prep time by 30%",  trueRate: 0.12 },
+  { name: "Cold Email",           pitch: "Try it free for 30 days",       trueRate: 0.08 },
+  { name: "Trade Show Follow-up", pitch: "Bulk discount for fleet orders",trueRate: 0.18 },
+  { name: "Newsletter Ad",        pitch: "See your ROI in 6 months",      trueRate: 0.05 },
+];
+const BEST_TRUE_RATE = Math.max(...ARMS.map(a => a.trueRate));
+const HISTORY_CAP = 200;
+
+function createArm(def) {
+  return { name: def.name, trueRate: def.trueRate, shown: 0, conversions: 0, alpha: 1, beta: 1 };
+}
+function createArmSet() { return ARMS.map(createArm); }
+
+function bernoulliSample(trueRate, u) {
+  // u is a shared uniform draw (common random numbers for a fair bandit-vs-AB comparison)
+  return (u < trueRate) ? 1 : 0;
+}
+
+// argmax with random tie-breaking (avoids a fixed bias toward arm 0)
+function argmaxRandomTie(values) {
+  let best = -Infinity, idxs = [];
+  for (let i = 0; i < values.length; i++) {
+    if (values[i] > best) { best = values[i]; idxs = [i]; }
+    else if (values[i] === best) { idxs.push(i); }
+  }
+  return idxs[Math.floor(Math.random() * idxs.length)];
+}
+
+function estimate(arm) { return arm.shown > 0 ? arm.conversions / arm.shown : 0; }
+
+function epsilonGreedySelect(arms, epsilon) {
+  if (Math.random() < epsilon) return Math.floor(Math.random() * arms.length); // explore
+  return argmaxRandomTie(arms.map(estimate));                                   // exploit
+}
+
+// --- Beta sampling for Thompson, via Gamma (Marsaglia–Tsang) ---
+function gaussian() {
+  let u = 0, v = 0;
+  while (u === 0) u = Math.random();
+  while (v === 0) v = Math.random();
+  return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v);
+}
+function gammaSample(k) {
+  if (k < 1) return gammaSample(1 + k) * Math.pow(Math.random(), 1 / k);
+  const d = k - 1 / 3;
+  const c = 1 / Math.sqrt(9 * d);
+  while (true) {
+    let x, v;
+    do { x = gaussian(); v = 1 + c * x; } while (v <= 0);
+    v = v * v * v;
+    const u = Math.random();
+    if (u < 1 - 0.0331 * x * x * x * x) return d * v;
+    if (Math.log(u) < 0.5 * x * x + d * (1 - v + Math.log(v))) return d * v;
+  }
+}
+function betaSample(a, b) {
+  const x = gammaSample(a), y = gammaSample(b);
+  return x / (x + y);
+}
+function thompsonSelect(arms) {
+  return argmaxRandomTie(arms.map(a => betaSample(a.alpha, a.beta)));
+}
+
+function abSelect(counter, n) { return counter % n; } // round-robin even split
+
+function updateEpsilonGreedy(arm, reward) { arm.shown++; arm.conversions += reward; }
+function updateThompson(arm, reward) {
+  arm.shown++; arm.conversions += reward;
+  if (reward === 1) arm.alpha++; else arm.beta++;
+}
+
+// Run one simulated day. Mutates banditArms/abArms via state; returns the per-day record.
+function runOneDay(state) {
+  const n = state.leadsPerDay;
+  const counts = [0, 0, 0, 0];
+  for (let i = 0; i < n; i++) {
+    const u = Math.random(); // shared draw → common random numbers
+
+    // --- selected bandit ---
+    let bIdx;
+    if (state.banditAlgo === "epsilon")      bIdx = epsilonGreedySelect(state.banditArms, state.epsilon);
+    else if (state.banditAlgo === "thompson")bIdx = thompsonSelect(state.banditArms);
+    else                                     bIdx = abSelect(state.banditCounter++, state.banditArms.length);
+    const bArm = state.banditArms[bIdx];
+    const bReward = bernoulliSample(bArm.trueRate, u);
+    if (state.banditAlgo === "thompson") updateThompson(bArm, bReward);
+    else updateEpsilonGreedy(bArm, bReward);
+    counts[bIdx]++;
+    state.banditConv += bReward;
+    state.banditLeads++;
+
+    // --- static A/B baseline (always running) ---
+    const aIdx = abSelect(state.abCounter++, state.abArms.length);
+    const aArm = state.abArms[aIdx];
+    const aReward = bernoulliSample(aArm.trueRate, u);
+    aArm.shown++; aArm.conversions += aReward;
+    state.abConv += aReward;
+  }
+
+  state.day++;
+  const rec = {
+    day: state.day,
+    banditCumConv: state.banditConv,
+    abCumConv: state.abConv,
+    armPct: counts.map(c => (n > 0 ? (100 * c / n) : 0)),
+  };
+  state.history.push(rec);
+  if (state.history.length > HISTORY_CAP) state.history.shift();
+  return rec;
+}
+
+function computeRegret(state) {
+  return BEST_TRUE_RATE * state.banditLeads - state.banditConv;
+}
+
+/* =====================================================================
+   2. STATE  (single object)
+   ===================================================================== */
+
+let simState;
+function freshState(preserve) {
+  return {
+    day: 0,
+    banditAlgo: preserve ? preserve.banditAlgo : "thompson",
+    banditArms: createArmSet(),
+    abArms: createArmSet(),
+    history: [],
+    isPlaying: false,
+    speed: preserve ? preserve.speed : 5,
+    epsilon: preserve ? preserve.epsilon : 0.1,
+    leadsPerDay: preserve ? preserve.leadsPerDay : 50,
+    banditConv: 0, banditLeads: 0, abConv: 0,
+    banditCounter: 0, abCounter: 0,
+  };
+}
+
+/* =====================================================================
+   3. RENDERING  (reads state, touches DOM/Chart.js — never mutates sim state)
+   ===================================================================== */
+
+const PALETTE = {
+  bandit: getCSS('--chart-gold'),
+  ab:     getCSS('--chart-rust'),
+  arms: [ getCSS('--chart-cream'), getCSS('--chart-gold'), getCSS('--chart-sage'), getCSS('--chart-rust') ],
+};
+function getCSS(v) { return getComputedStyle(document.documentElement).getPropertyValue(v).trim(); }
+
+Chart.defaults.color = getCSS('--color-text');
+Chart.defaults.font.family = "'Oswald', sans-serif";
+Chart.defaults.font.size = 13;
+const GRID = 'rgba(255,243,209,0.12)';
+
+let convChart, armChart;
+
+function initCharts() {
+  const convCtx = document.getElementById('convChart').getContext('2d');
+  convChart = new Chart(convCtx, {
+    type: 'line',
+    data: {
+      labels: [],
+      datasets: [
+        { label: 'Bandit (selected)', data: [], borderColor: PALETTE.bandit, backgroundColor: PALETTE.bandit, borderWidth: 3, pointRadius: 0, tension: 0.15 },
+        { label: 'Static A/B test',   data: [], borderColor: PALETTE.ab, backgroundColor: PALETTE.ab, borderWidth: 3, borderDash: [7, 5], pointRadius: 0, tension: 0.15 },
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false, animation: false,
+      interaction: { mode: 'index', intersect: false },
+      scales: {
+        x: { title: { display: true, text: 'Day' }, grid: { color: GRID }, ticks: { maxTicksLimit: 10 } },
+        y: { title: { display: true, text: 'Cumulative conversions' }, grid: { color: GRID }, beginAtZero: true }
+      },
+      plugins: { legend: { labels: { boxWidth: 18, font: { size: 13 } } } }
+    }
+  });
+
+  const armCtx = document.getElementById('armChart').getContext('2d');
+  armChart = new Chart(armCtx, {
+    type: 'line',
+    data: {
+      labels: [],
+      datasets: ARMS.map((a, i) => ({
+        label: a.name, data: [],
+        borderColor: PALETTE.arms[i],
+        backgroundColor: hexA(PALETTE.arms[i], 0.55),
+        borderWidth: 1.5, pointRadius: 0, fill: true, tension: 0.2,
+      }))
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false, animation: false,
+      interaction: { mode: 'index', intersect: false },
+      scales: {
+        x: { title: { display: true, text: 'Day' }, grid: { color: GRID }, ticks: { maxTicksLimit: 10 } },
+        y: { stacked: true, min: 0, max: 100, title: { display: true, text: '% of daily leads' }, grid: { color: GRID }, ticks: { callback: v => v + '%' } }
+      },
+      plugins: { legend: { labels: { boxWidth: 18, font: { size: 12 } } } }
+    }
+  });
+}
+
+function hexA(hex, a) {
+  const h = hex.replace('#', '');
+  const r = parseInt(h.substring(0, 2), 16), g = parseInt(h.substring(2, 4), 16), b = parseInt(h.substring(4, 6), 16);
+  return `rgba(${r},${g},${b},${a})`;
+}
+
+function renderCharts(state) {
+  const labels = state.history.map(h => h.day);
+  convChart.data.labels = labels;
+  convChart.data.datasets[0].data = state.history.map(h => h.banditCumConv);
+  convChart.data.datasets[1].data = state.history.map(h => h.abCumConv);
+  convChart.update('none');
+
+  armChart.data.labels = labels;
+  for (let i = 0; i < ARMS.length; i++) {
+    armChart.data.datasets[i].data = state.history.map(h => h.armPct[i]);
+  }
+  armChart.update('none');
+}
+
+function renderTable(state) {
+  // deterministic leader (first max among arms with data) — avoids star flicker on ties
+  let leader = -1, leaderEst = -1;
+  state.banditArms.forEach((arm, i) => {
+    if (arm.shown > 0 && estimate(arm) > leaderEst) { leaderEst = estimate(arm); leader = i; }
+  });
+  const rows = state.banditArms.map((arm, i) => {
+    const est = arm.shown > 0 ? (100 * estimate(arm)).toFixed(1) + '%' : '—';
+    return `<tr class="${i === leader && arm.shown > 0 ? 'leader' : ''}">
+      <td class="campaign"><span class="swatch" style="background:${PALETTE.arms[i]}"></span>${arm.name}</td>
+      <td class="num">${arm.shown.toLocaleString()}</td>
+      <td class="num">${arm.conversions.toLocaleString()}</td>
+      <td class="num">${est}</td>
+      <td class="num true-col">${(100 * arm.trueRate).toFixed(0)}%</td>
+    </tr>`;
+  }).join('');
+  document.getElementById('tableBody').innerHTML = rows;
+}
+
+function renderRegret(state) {
+  const regret = computeRegret(state);
+  document.getElementById('regretValue').textContent = Math.round(regret).toLocaleString();
+  document.getElementById('statDay').textContent = state.day.toLocaleString();
+  document.getElementById('statBanditConv').textContent = state.banditConv.toLocaleString();
+  document.getElementById('statAbConv').textContent = state.abConv.toLocaleString();
+  document.getElementById('statLeads').textContent = state.banditLeads.toLocaleString();
+}
+
+function renderAll(state) {
+  renderCharts(state);
+  renderTable(state);
+  renderRegret(state);
+}
+
+/* =====================================================================
+   4. CONTROLLER  (event listeners + tick loop)
+   ===================================================================== */
+
+let tickTimer = null;
+
+function startLoop() {
+  stopLoop();
+  tickTimer = setInterval(() => {
+    runOneDay(simState);
+    renderAll(simState);
+  }, 1000 / simState.speed);
+}
+function stopLoop() { if (tickTimer) { clearInterval(tickTimer); tickTimer = null; } }
+
+function setPlaying(playing) {
+  simState.isPlaying = playing;
+  document.getElementById('playBtn').innerHTML = playing ? '⏸ Pause' : '▶ Play';
+  if (playing) startLoop(); else stopLoop();
+}
+
+function restartSimulation(keepPlaying) {
+  const wasPlaying = keepPlaying && simState.isPlaying;
+  stopLoop();
+  simState = freshState(simState);
+  renderAll(simState);
+  setPlaying(wasPlaying);
+}
+
+function syncEpsilonEnabled() {
+  const block = document.getElementById('epsilonBlock');
+  const slider = document.getElementById('epsilonSlider');
+  const active = simState.banditAlgo === 'epsilon';
+  block.classList.toggle('disabled', !active);
+  slider.disabled = !active;
+}
+
+function bindControls() {
+  // algorithm selector
+  document.getElementById('algoToggle').addEventListener('change', e => {
+    if (e.target.name !== 'algo') return;
+    simState.banditAlgo = e.target.value;
+    syncEpsilonEnabled();
+    restartSimulation(true); // changing algorithm restarts the bandit's learning
+  });
+
+  // epsilon — live label on input, restart on release
+  const epsSlider = document.getElementById('epsilonSlider');
+  epsSlider.addEventListener('input', () => {
+    document.getElementById('epsilonVal').textContent = parseFloat(epsSlider.value).toFixed(2);
+  });
+  epsSlider.addEventListener('change', () => {
+    simState.epsilon = parseFloat(epsSlider.value);
+    restartSimulation(true); // changing epsilon restarts the bandit's learning
+  });
+
+  // leads per day — live, no restart needed (just changes volume going forward)
+  const leadsSlider = document.getElementById('leadsSlider');
+  leadsSlider.addEventListener('input', () => {
+    simState.leadsPerDay = parseInt(leadsSlider.value, 10);
+    document.getElementById('leadsVal').textContent = simState.leadsPerDay;
+  });
+
+  // speed
+  const speedSlider = document.getElementById('speedSlider');
+  speedSlider.addEventListener('input', () => {
+    simState.speed = parseInt(speedSlider.value, 10);
+    document.getElementById('speedVal').textContent = simState.speed;
+    if (simState.isPlaying) startLoop(); // re-arm at new rate
+  });
+
+  // play / pause
+  document.getElementById('playBtn').addEventListener('click', () => setPlaying(!simState.isPlaying));
+
+  // step one day
+  document.getElementById('stepBtn').addEventListener('click', () => {
+    setPlaying(false);
+    runOneDay(simState);
+    renderAll(simState);
+  });
+
+  // reset
+  document.getElementById('resetBtn').addEventListener('click', () => restartSimulation(false));
+
+  // reveal true rates
+  document.getElementById('revealToggle').addEventListener('change', e => {
+    document.body.classList.toggle('reveal', e.target.checked);
+  });
+}
+
+/* ---------- boot ---------- */
+function init() {
+  simState = freshState(null);
+  initCharts();
+  bindControls();
+  syncEpsilonEnabled();
+  renderAll(simState);
+}
+init();
+</script>
+</body>
+</html>
