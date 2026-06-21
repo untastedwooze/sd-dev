@@ -28,11 +28,12 @@
           <span class="tagline">teaching your ad budget to think for itself</span>
         </div>
         <p class="modal-intro">
-          Four B2B marketing campaigns compete for the same leads. A
-          <b>multi-armed bandit</b> automatically shifts spend toward whatever is
-          working right now — instead of splitting budget evenly and waiting for a
-          quarterly report. Press <b>Play</b> and watch it discover the best campaign
-          on its own.
+          Four B2B marketing campaigns compete for the same leads — but each costs
+          a different amount per lead, and your budget is finite. A
+          <b>multi-armed bandit</b> automatically shifts spend toward whatever earns
+          the most <b>profit per dollar</b>, not just the most clicks. The catch:
+          the best-converting campaign can still lose money. Press <b>Play</b> and
+          watch it find the profitable one before the budget runs dry.
         </p>
         <div class="modal-footer">
           <div class="modal-byline">Built by <a href="[portfolio URL]">[Your Name]</a></div>
@@ -49,6 +50,12 @@
       <a class="about-btn is-active" href="index.html">B2B</a>
     </div>
   </header>
+
+  <!-- BANKRUPT BANNER -->
+  <div class="bankrupt-banner" id="bankruptBanner" role="status">
+    💸 <b>Budget depleted.</b> The bandit ran out of money — simulation paused.
+    Raise the starting budget or hit Reset to try again.
+  </div>
 
   <!-- DASHBOARD -->
   <main class="dash">
@@ -84,6 +91,12 @@
           <label class="lbl">Conversion delay — <span class="val" id="delayVal">0</span> days</label>
           <input type="range" id="delaySlider" min="0" max="30" step="1" value="0">
           <div class="hint">How long after contact a lead decides. The algorithm can't learn from a lead until it resolves — more delay, slower learning.</div>
+        </div>
+
+        <div class="control-block">
+          <label class="lbl">Starting budget — <span class="val" id="budgetVal">$50,000</span></label>
+          <input type="range" id="budgetSlider" min="5000" max="200000" step="5000" value="50000">
+          <div class="hint">Each lead costs money; each conversion earns $300. Run out and the campaign stops. A smaller budget is a tighter tightrope.</div>
         </div>
 
         <div class="control-block">
@@ -126,17 +139,58 @@
       <div class="chart-box"><canvas id="armChart"></canvas></div>
     </div>
 
-    <!-- REGRET -->
-    <section class="panel regret" aria-label="Cumulative regret">
-      <div class="regret-flank">
-        <span class="star"></span>
-        <div>
-          <div class="regret-label">Cumulative Regret</div>
-          <div class="regret-value num" id="regretValue">0</div>
-        </div>
-        <span class="star"></span>
+    <!-- CHART 3 -->
+    <div class="card chart3">
+      <h3>Bankroll Over Time</h3>
+      <p class="cap">Money in the bank: bandit vs. static A/B, both starting from the same budget. The bandit compounds profit; the even split drains toward zero.</p>
+      <div class="chart-box"><canvas id="bankChart"></canvas></div>
+    </div>
+
+    <!-- HEADLINE CALLOUT: regret ⇄ budget -->
+    <section class="panel regret" aria-label="Headline metrics">
+      <div class="metric-toggle" id="metricToggle" role="tablist" aria-label="Metric view">
+        <label><input type="radio" name="metric" value="regret" checked><span>Regret</span></label>
+        <label><input type="radio" name="metric" value="budget"><span>Budget</span></label>
       </div>
-      <p class="regret-sub">Leads we lost by not always picking the best campaign. Lower is better — a smart bandit keeps it nearly flat.</p>
+
+      <!-- REGRET VIEW -->
+      <div class="metric-view metric-regret">
+        <div class="regret-flank">
+          <span class="star"></span>
+          <div>
+            <div class="regret-label">Cumulative Regret</div>
+            <div class="regret-value num" id="regretValue">0</div>
+          </div>
+          <span class="star"></span>
+        </div>
+        <p class="regret-sub">
+          Leads lost by not always picking the best-converting campaign.
+          In dollars, regret is <b class="num" id="profitRegretValue">$0</b> —
+          profit left on the table by not always picking the most <i>profitable</i> one.
+        </p>
+      </div>
+
+      <!-- BUDGET VIEW -->
+      <div class="metric-view metric-budget">
+        <div class="regret-flank">
+          <span class="star"></span>
+          <div>
+            <div class="regret-label">Bandit Bankroll</div>
+            <div class="regret-value num" id="budgetValue">$50,000</div>
+          </div>
+          <span class="star"></span>
+        </div>
+        <p class="regret-sub">
+          Starting budget plus profit so far. A/B test: <b class="num" id="abBudgetValue">$50,000</b>.
+          The bandit grows the bankroll; the even split slowly bleeds out.
+        </p>
+        <div class="budget-kpis">
+          <span>Net profit <b class="num" id="netProfitValue">+$0</b></span>
+          <span>ROI <b class="num" id="roiValue">—</b></span>
+        </div>
+      </div>
+
+      <!-- shared run stats -->
       <div class="regret-stats">
         <span>Day <b class="num" id="statDay">0</b></span>
         <span>Leads served <b class="num" id="statLeads">0</b></span>
@@ -152,10 +206,13 @@
         <thead>
           <tr>
             <th>Campaign</th>
+            <th>Cost / Lead</th>
             <th>Times Shown</th>
             <th>Conversions</th>
             <th>Est. Conv. Rate</th>
+            <th>Est. Net / Lead</th>
             <th class="true-col">True Rate</th>
+            <th class="true-col">True Net / Lead</th>
           </tr>
         </thead>
         <tbody id="tableBody"></tbody>

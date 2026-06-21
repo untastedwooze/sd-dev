@@ -78,7 +78,7 @@ Binary outcome per lead: demo booked (1) or not (0). No multi-stage funnel, no d
 2. **Leads per day** — slider or input, range ~10–500, default 50. Controls simulation volume per tick.
 3. **Algorithm selector** — toggle/dropdown: Epsilon-Greedy | Thompson Sampling | Static A/B Test.
 
-No other configurable parameters (no cost, no budget, no segments, no non-stationarity, no delayed reward). Keep the surface area small.
+Two additional levers were added after the initial scope (see §13): **conversion delay** (how long after contact a lead resolves) and **starting budget** (the budget/ROI model). No segments or non-stationarity. Keep the surface area small beyond these.
 
 ---
 
@@ -210,8 +210,9 @@ All visual decisions live in CSS custom properties (§10) at the top of the `<st
 ## 13. Explicitly Out of Scope (do not build)
 
 - UCB or any algorithm beyond the 3 listed.
-- Multi-stage funnels or delayed rewards.
-- Cost-per-arm, budget constraints, or ROI/dollar modeling.
+- Multi-stage funnels.
+- ~~Cost-per-arm, budget constraints, or ROI/dollar modeling.~~ **Now in scope:** each campaign has a known cost-per-lead, conversions return a constant profit, and the run starts from a finite budget. Arms are ranked by expected profit-per-lead (`rate × profit − cost`), so the highest-converting campaign isn't necessarily the most profitable. The bandit can go bankrupt; the static A/B baseline drains its budget faster.
+- ~~Delayed rewards.~~ Now in scope: a conversion-delay lever.
 - Non-stationary/drifting conversion rates.
 - Customer segments.
 - Any backend, database, or persistence layer.

@@ -252,9 +252,10 @@ body::before {
   min-height: 0;
   display: grid;
   grid-template-columns: 340px 1fr 1fr 1fr 1fr;
-  grid-template-rows: 1.1fr 0.9fr;
+  grid-template-rows: 1fr 1fr 0.85fr;
   grid-template-areas:
     "side chart1  chart1  chart2  chart2"
+    "side chart3  chart3  chart3  chart3"
     "side regret  table   table   table";
   gap: 12px;
 }
@@ -479,6 +480,66 @@ button.btn:active { transform: translate(3px, 3px); box-shadow: 0 0 0 rgba(0,0,0
 }
 .regret-stats b { color: var(--color-text); font-weight: 600; }
 
+/* metric toggle (Regret ⇄ Budget) inside the callout */
+.metric-toggle {
+  display: flex;
+  border: 2px solid var(--color-accent);
+  border-radius: 7px;
+  overflow: hidden;
+  margin: 0 auto 10px;
+  max-width: 220px;
+}
+.metric-toggle label {
+  flex: 1 1 0;
+  text-align: center;
+  padding: 4px 10px;
+  font-size: 0.74rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  user-select: none;
+  background: transparent;
+  transition: background 0.12s, color 0.12s;
+}
+.metric-toggle input { position: absolute; opacity: 0; pointer-events: none; }
+.metric-toggle label:has(input:checked) { background: var(--color-accent); color: var(--color-text); }
+
+/* swap the two views; regret shows by default, budget on body.show-budget */
+.metric-budget { display: none; }
+body.show-budget .metric-regret { display: none; }
+body.show-budget .metric-budget { display: block; }
+
+.budget-kpis {
+  display: flex;
+  justify-content: center;
+  gap: 22px;
+  margin-top: 8px;
+  font-size: 0.82rem;
+}
+.budget-kpis b { color: var(--chart-gold); font-weight: 700; }
+
+/* negative dollars (unprofitable arm, busted bankroll) */
+.neg { color: var(--chart-rust) !important; }
+
+/* =====================================================================
+   BANKRUPT BANNER — shown only when the bandit runs out of money
+   ===================================================================== */
+.bankrupt-banner {
+  display: none;
+  flex: 0 0 auto;
+  text-align: center;
+  background: var(--color-accent);
+  color: var(--color-text);
+  border: var(--border-width) solid var(--color-charcoal);
+  box-shadow: inset 0 0 0 3px var(--color-text), var(--shadow-offset) var(--shadow-offset) 0 var(--color-charcoal);
+  border-radius: 8px;
+  padding: 9px 14px;
+  font-size: 0.92rem;
+}
+.bankrupt-banner b { font-weight: 700; }
+body.bankrupt .bankrupt-banner { display: block; }
+
 /* ---------- four-point star (decorative chrome) ---------- */
 .star {
   width: 20px;
@@ -501,6 +562,7 @@ button.btn:active { transform: translate(3px, 3px); box-shadow: 0 0 0 rgba(0,0,0
 }
 .card.chart1 { grid-area: chart1; }
 .card.chart2 { grid-area: chart2; }
+.card.chart3 { grid-area: chart3; }
 .card.tablecard { grid-area: table; }
 .card h3 {
   font-family: var(--font-data);
