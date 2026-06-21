@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Samuel Duffy — Résumé</title>
-<meta name="description" content="Résumé of Samuel Duffy — [role], covering experience, skills, projects, and education.">
+<meta name="description" content="Résumé of Samuel Duffy — [role], covering skills, experience, and education.">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -12,20 +12,26 @@
 
 <style>
 /* =====================================================================
-   CLEAN & PROFESSIONAL RÉSUMÉ  (all knobs live here)
+   SINGLE-COLUMN RÉSUMÉ — template layout, B2Bandits parchment palette
    ===================================================================== */
 :root {
-  --ink:      #1a1a1a;   /* primary text */
-  --ink-soft: #555;      /* secondary text */
-  --ink-faint:#888;      /* meta / dates */
-  --rule:     #e2e2e2;   /* hairline dividers */
-  --accent:   #9E2A2B;   /* restrained accent, ties to portfolio */
-  --bg:       #ffffff;
-  --bg-page:  #f4f3ef;   /* page surround (screen only) */
-  --maxw:     820px;
+  /* palette (shared with the B2Bandits portfolio) */
+  --color-bg: #1C2E2A;   /* deep vintage teal — page surround */
+  --color-accent: #9E2A2B; /* rust / crimson — accent */
+  --color-charcoal: #212529;
+
+  --bg-sheet: #FFF9EC;   /* warm parchment paper */
+  --ink:      #1f1b16;   /* primary text */
+  --ink-soft: #4a443c;   /* body / bullets */
+  --ink-faint:#8a8275;   /* dates / meta */
+  --rule:     #cdbf9f;   /* section rule on parchment */
+
+  --border-width: 3px;
+  --shadow-offset: 5px;
+  --maxw: 850px;
 
   --font-body: 'Inter', system-ui, -apple-system, sans-serif;
-  --font-name: 'Newsreader', Georgia, serif;
+  --font-serif:'Newsreader', Georgia, serif;
 }
 
 * { box-sizing: border-box; }
@@ -33,156 +39,207 @@ html { font-size: 16px; }
 html, body { margin: 0; padding: 0; }
 
 body {
-  background: var(--bg-page);
+  background-color: var(--color-bg);
   color: var(--ink);
   font-family: var(--font-body);
-  line-height: 1.5;
+  line-height: 1.4;
   -webkit-font-smoothing: antialiased;
-  padding: 40px 20px;
+  position: relative;
+  padding: 28px 20px 44px;
 }
 
-.sheet {
-  max-width: var(--maxw);
-  margin: 0 auto;
-  background: var(--bg);
-  padding: 56px 60px;
-  box-shadow: 0 2px 24px rgba(0,0,0,0.08);
-  border-radius: 4px;
+/* faint paper / noise texture — page surround only */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.05;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 
-/* ---------- header ---------- */
-.cv-header {
+/* ---------- persistent red banner (shared chrome) ---------- */
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 10;
   display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
-  gap: 24px;
-  padding-bottom: 20px;
-  border-bottom: 2px solid var(--ink);
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+  background: var(--color-accent);
+  color: #FFF3D1;
+  border: none;
+  border-bottom: var(--border-width) solid var(--color-charcoal);
+  box-shadow: inset 0 0 0 3px #FFF3D1;
+  border-radius: 0;
+  padding: 10px 18px;
+  margin: -28px -20px 16px;
 }
-.cv-header h1 {
-  font-family: var(--font-name);
-  font-weight: 600;
-  font-size: 2.5rem;
-  line-height: 1.05;
-  margin: 0 0 4px;
-  letter-spacing: -0.01em;
-}
-.cv-header .role {
-  font-size: 1rem;
-  color: var(--accent);
-  font-weight: 600;
-  letter-spacing: 0.02em;
-  text-transform: uppercase;
-}
-.contact {
-  text-align: right;
-  font-size: 0.82rem;
-  color: var(--ink-soft);
-  line-height: 1.7;
-  white-space: nowrap;
-}
-.contact a { color: var(--ink-soft); text-decoration: none; }
-.contact a:hover { color: var(--accent); text-decoration: underline; }
-
-/* ---------- sections ---------- */
-section { margin-top: 30px; }
-.section-title {
-  font-size: 0.78rem;
+.nav-btn {
+  font-family: var(--font-body);
+  font-size: 0.75rem;
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.14em;
-  color: var(--ink-faint);
-  margin: 0 0 14px;
-  padding-bottom: 6px;
-  border-bottom: 1px solid var(--rule);
+  letter-spacing: 0.06em;
+  color: #FFF3D1;
+  background: transparent;
+  border: 2px solid rgba(255,243,209,0.45);
+  border-radius: 6px;
+  padding: 4px 12px;
+  cursor: pointer;
+  white-space: nowrap;
+  text-decoration: none;
+  display: inline-block;
+  transition: background 0.12s, border-color 0.12s;
+}
+.nav-btn:hover { background: rgba(255,243,209,0.12); border-color: #FFF3D1; }
+.nav-btn.is-active { background: #FFF3D1; color: var(--color-accent); border-color: #FFF3D1; }
+
+/* ---------- the sheet ---------- */
+.sheet {
+  position: relative;
+  z-index: 1;
+  max-width: var(--maxw);
+  margin: 0 auto;
+  background: var(--bg-sheet);
+  border: var(--border-width) solid var(--color-charcoal);
+  box-shadow: var(--shadow-offset) var(--shadow-offset) 0 var(--color-charcoal);
+  border-radius: 12px;
+  padding: 30px 52px 40px;
 }
 
-.summary { font-size: 0.98rem; color: var(--ink-soft); margin: 0; max-width: 64ch; }
+/* ---------- header (centered, ~1in tall) ---------- */
+.cv-header {
+  text-align: center;
+  height: 96px;
+  margin-bottom: 14px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.cv-header h1 {
+  font-family: var(--font-serif);
+  font-weight: 500;
+  font-size: 2.1rem;
+  line-height: 1.0;
+  letter-spacing: 0.01em;
+  margin: 0 0 3px;
+  color: var(--ink);
+}
+.cv-header .role {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 1rem;
+  color: var(--color-accent);
+  margin-bottom: 5px;
+}
+.contact {
+  font-size: 0.82rem;
+  color: var(--ink-soft);
+  letter-spacing: 0.01em;
+}
+.contact a { color: var(--ink-soft); text-decoration: none; }
+.contact a:hover { color: var(--color-accent); text-decoration: underline; }
+.contact .sep { color: var(--ink-faint); margin: 0 12px; }
+
+/* ---------- sections ---------- */
+section { margin-top: 18px; }
+.section-title {
+  font-family: var(--font-serif);
+  font-weight: 500;
+  font-size: 1.3rem;
+  color: var(--ink);
+  margin: 0 0 9px;
+  padding-bottom: 3px;
+  border-bottom: 2px solid var(--rule);
+}
+
+/* ---------- skills ---------- */
+.skill-line { font-size: 0.9rem; color: var(--ink-soft); margin: 0 0 4px; }
+.skill-line:last-child { margin-bottom: 0; }
+.skill-line b { color: var(--ink); font-weight: 600; }
 
 /* ---------- experience ---------- */
-.job { margin-bottom: 22px; }
+.job { margin-bottom: 14px; }
 .job:last-child { margin-bottom: 0; }
 .job-head {
   display: flex;
   justify-content: space-between;
   align-items: baseline;
   gap: 16px;
-  flex-wrap: wrap;
 }
-.job-title { font-weight: 600; font-size: 1.02rem; }
-.job-title .at { color: var(--accent); }
-.job-dates { font-size: 0.8rem; color: var(--ink-faint); white-space: nowrap; }
-.job-meta { font-size: 0.85rem; color: var(--ink-soft); margin: 1px 0 8px; }
-.job ul { margin: 0; padding-left: 18px; }
-.job li { font-size: 0.92rem; color: var(--ink-soft); margin-bottom: 5px; }
-.job li::marker { color: var(--accent); }
+.job-title { font-size: 0.96rem; color: var(--ink-soft); }
+.job-title b { color: var(--ink); font-weight: 600; }
+.job-dates { font-size: 0.85rem; color: var(--ink-faint); white-space: nowrap; }
+.job ul { margin: 4px 0 0; padding-left: 19px; }
+.job li { font-size: 0.89rem; color: var(--ink-soft); margin-bottom: 3px; }
+.job li::marker { color: var(--color-accent); }
 
-/* ---------- two column lower half ---------- */
-.grid-2 {
-  display: grid;
-  grid-template-columns: 1.4fr 1fr;
-  gap: 36px;
+/* ---------- education ---------- */
+.edu { margin-bottom: 10px; }
+.edu:last-child { margin-bottom: 0; }
+.edu-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 16px;
 }
-
-/* skills */
-.skill-group { margin-bottom: 12px; }
-.skill-group h4 {
-  font-size: 0.82rem;
-  font-weight: 600;
-  margin: 0 0 4px;
-  color: var(--ink);
-}
-.skill-group p { margin: 0; font-size: 0.88rem; color: var(--ink-soft); }
-
-/* education / projects compact items */
-.item { margin-bottom: 16px; }
-.item:last-child { margin-bottom: 0; }
-.item .t { font-weight: 600; font-size: 0.95rem; }
-.item .s { font-size: 0.85rem; color: var(--ink-soft); }
-.item .d { font-size: 0.78rem; color: var(--ink-faint); }
-.item a { color: var(--accent); text-decoration: none; }
-.item a:hover { text-decoration: underline; }
+.edu-row.top b { color: var(--ink); font-weight: 600; font-size: 1rem; }
+.edu-row .date { font-size: 0.88rem; color: var(--ink-faint); white-space: nowrap; }
+.edu-row.sub { font-size: 0.92rem; color: var(--ink-soft); }
+.edu-row.sub .grade { color: var(--ink-soft); }
 
 /* ---------- responsive ---------- */
-@media (max-width: 680px) {
-  .sheet { padding: 36px 26px; }
-  .cv-header { flex-direction: column; align-items: flex-start; gap: 12px; }
-  .contact { text-align: left; }
-  .grid-2 { grid-template-columns: 1fr; gap: 24px; }
-  .cv-header h1 { font-size: 2rem; }
+@media (max-width: 640px) {
+  .sheet { padding: 34px 24px 38px; }
+  .cv-header h1 { font-size: 2.2rem; }
+  .contact .sep { display: block; height: 0; margin: 2px 0; overflow: hidden; }
+  .job-head, .edu-row { flex-direction: column; gap: 2px; }
 }
 
 /* ---------- print ---------- */
 @media print {
   body { background: #fff; padding: 0; }
-  .sheet { box-shadow: none; max-width: none; padding: 0.5in 0.6in; border-radius: 0; }
+  body::before { display: none; }
+  .topbar { display: none; }
+  .sheet {
+    background: #fff;
+    box-shadow: none;
+    border: none;
+    border-radius: 0;
+    max-width: none;
+    padding: 0.5in 0.6in;
+  }
   a { color: var(--ink); }
 }
 </style>
 </head>
 <body>
+<header class="topbar">
+  <a class="nav-btn is-active" href="cv-clean.html">CV</a>
+  <a class="nav-btn" href="index.html">B2B</a>
+</header>
+
 <main class="sheet">
 
   <header class="cv-header">
-    <div>
-      <h1>Samuel Duffy</h1>
-      <div class="role">[Your Title — e.g. Software Engineer]</div>
-    </div>
+    <h1>Samuel Duffy</h1>
     <div class="contact">
-      <a href="mailto:duffy.samuel.m@gmail.com">duffy.samuel.m@gmail.com</a><br>
-      [City, Country]<br>
-      <a href="[portfolio URL]">[portfolio URL]</a><br>
-      <a href="[linkedin URL]">[linkedin]</a> · <a href="[github URL]">[github]</a>
+      [+1 XXX XXX XXXX]
+      <span class="sep">·</span>
+      <a href="mailto:duffy.samuel.m@gmail.com">duffy.samuel.m@gmail.com</a>
+      <span class="sep">·</span>
+      <a href="[portfolio URL]">[portfolio URL]</a>
     </div>
   </header>
 
   <section>
-    <h2 class="section-title">Summary</h2>
-    <p class="summary">
-      [Two to three sentence positioning statement. Who you are, the kind of
-      problems you solve, and the value you bring. Lead with your strongest,
-      most relevant credential for the roles you're targeting.]
-    </p>
+    <h2 class="section-title">Skills</h2>
+    <p class="skill-line"><b>Programming Languages:</b> [e.g. JavaScript/TypeScript, Python, SQL]</p>
+    <p class="skill-line"><b>Frameworks &amp; Tools:</b> [e.g. React, Node, Chart.js, Git]</p>
+    <p class="skill-line"><b>Cloud &amp; Data:</b> [e.g. AWS, Docker, PostgreSQL]</p>
   </section>
 
   <section>
@@ -190,10 +247,9 @@ section { margin-top: 30px; }
 
     <div class="job">
       <div class="job-head">
-        <span class="job-title">[Job Title] <span class="at">@ [Company]</span></span>
+        <span class="job-title"><b>[Job Title]</b>, [Company] — [Location]</span>
         <span class="job-dates">[Mon YYYY] – Present</span>
       </div>
-      <div class="job-meta">[Location · brief one-line company descriptor]</div>
       <ul>
         <li>[Accomplishment with a measurable result — start with an action verb, quantify the impact.]</li>
         <li>[Accomplishment — what you built/led, the tech or method, and the outcome.]</li>
@@ -203,22 +259,21 @@ section { margin-top: 30px; }
 
     <div class="job">
       <div class="job-head">
-        <span class="job-title">[Job Title] <span class="at">@ [Company]</span></span>
+        <span class="job-title"><b>[Job Title]</b>, [Company] — [Location]</span>
         <span class="job-dates">[Mon YYYY] – [Mon YYYY]</span>
       </div>
-      <div class="job-meta">[Location · brief one-line company descriptor]</div>
       <ul>
         <li>[Accomplishment with a measurable result.]</li>
+        <li>[Accomplishment.]</li>
         <li>[Accomplishment.]</li>
       </ul>
     </div>
 
     <div class="job">
       <div class="job-head">
-        <span class="job-title">[Job Title] <span class="at">@ [Company]</span></span>
+        <span class="job-title"><b>[Job Title]</b>, [Company] — [Location]</span>
         <span class="job-dates">[Mon YYYY] – [Mon YYYY]</span>
       </div>
-      <div class="job-meta">[Location]</div>
       <ul>
         <li>[Accomplishment.]</li>
         <li>[Accomplishment.]</li>
@@ -226,49 +281,29 @@ section { margin-top: 30px; }
     </div>
   </section>
 
-  <div class="grid-2">
-    <section>
-      <h2 class="section-title">Selected Projects</h2>
-      <div class="item">
-        <div class="t">Multi-Armed Bandit Demo</div>
-        <div class="s">Interactive marketing-optimization simulator (vanilla JS, Chart.js).</div>
-        <div class="d"><a href="index.html">View demo →</a></div>
-      </div>
-      <div class="item">
-        <div class="t">[Project Name]</div>
-        <div class="s">[One-line description — what it does and the stack.]</div>
-        <div class="d"><a href="[url]">[link]</a></div>
-      </div>
-      <div class="item">
-        <div class="t">[Project Name]</div>
-        <div class="s">[One-line description.]</div>
-        <div class="d"><a href="[url]">[link]</a></div>
-      </div>
-    </section>
-
-    <section>
-      <h2 class="section-title">Skills</h2>
-      <div class="skill-group">
-        <h4>Languages</h4>
-        <p>[e.g. JavaScript/TypeScript, Python, SQL, …]</p>
-      </div>
-      <div class="skill-group">
-        <h4>Frameworks &amp; Tools</h4>
-        <p>[e.g. React, Node, …]</p>
-      </div>
-      <div class="skill-group">
-        <h4>Other</h4>
-        <p>[e.g. data analysis, cloud, …]</p>
-      </div>
-    </section>
-  </div>
-
   <section>
     <h2 class="section-title">Education</h2>
-    <div class="item">
-      <div class="t">[Degree], [Field]</div>
-      <div class="s">[University] · [Honors / GPA if relevant]</div>
-      <div class="d">[YYYY] – [YYYY]</div>
+
+    <div class="edu">
+      <div class="edu-row top">
+        <b>[University]</b>
+        <span class="date">[Mon YYYY]</span>
+      </div>
+      <div class="edu-row sub">
+        <span>[Degree] in [Field]</span>
+        <span class="grade">[Grade / GPA / Honors]</span>
+      </div>
+    </div>
+
+    <div class="edu">
+      <div class="edu-row top">
+        <b>[University]</b>
+        <span class="date">[Mon YYYY]</span>
+      </div>
+      <div class="edu-row sub">
+        <span>[Degree] in [Field]</span>
+        <span class="grade">[Grade / GPA / Honors]</span>
+      </div>
     </div>
   </section>
 
