@@ -67,19 +67,17 @@
         <h2 class="section-title"><span class="star"></span>Control Panel <small>turn the dials</small></h2>
 
         <div class="control-block">
-          <label class="lbl">Algorithm</label>
+          <label class="lbl">Algorithm<button type="button" class="info" data-tip="Changing the algorithm or epsilon restarts the bandit's learning. The A/B baseline always runs alongside for comparison." aria-label="More info">?</button></label>
           <div class="algo-toggle" id="algoToggle">
             <label><input type="radio" name="algo" value="thompson" checked><span>Thompson Sampling</span></label>
             <label><input type="radio" name="algo" value="epsilon"><span>Epsilon-Greedy</span></label>
             <label><input type="radio" name="algo" value="ab"><span>Static A/B Test</span></label>
           </div>
-          <div class="hint">Changing the algorithm or epsilon restarts the bandit's learning. The A/B baseline always runs alongside for comparison.</div>
         </div>
 
         <div class="control-block" id="epsilonBlock">
-          <label class="lbl">Epsilon (explore rate) — <span class="val" id="epsilonVal">0.10</span></label>
+          <label class="lbl">Epsilon (explore rate) — <span class="val" id="epsilonVal">0.10</span><button type="button" class="info" data-tip="How often Epsilon-Greedy tries a random campaign." aria-label="More info">?</button></label>
           <input type="range" id="epsilonSlider" min="0" max="1" step="0.01" value="0.1">
-          <div class="hint">How often Epsilon-Greedy tries a random campaign.</div>
         </div>
 
         <div class="control-block">
@@ -88,15 +86,13 @@
         </div>
 
         <div class="control-block">
-          <label class="lbl">Conversion delay — <span class="val" id="delayVal">0</span> days</label>
+          <label class="lbl">Conversion delay — <span class="val" id="delayVal">0</span> days<button type="button" class="info" data-tip="How long after contact a lead decides. The algorithm can't learn from a lead until it resolves — more delay, slower learning." aria-label="More info">?</button></label>
           <input type="range" id="delaySlider" min="0" max="30" step="1" value="0">
-          <div class="hint">How long after contact a lead decides. The algorithm can't learn from a lead until it resolves — more delay, slower learning.</div>
         </div>
 
         <div class="control-block">
-          <label class="lbl">Starting budget — <span class="val" id="budgetVal">$50,000</span></label>
+          <label class="lbl">Starting budget — <span class="val" id="budgetVal">$50,000</span><button type="button" class="info" data-tip="Each lead costs money; each conversion earns $300. Run out and the campaign stops. A smaller budget is a tighter tightrope." aria-label="More info">?</button></label>
           <input type="range" id="budgetSlider" min="5000" max="200000" step="5000" value="50000">
-          <div class="hint">Each lead costs money; each conversion earns $300. Run out and the campaign stops. A smaller budget is a tighter tightrope.</div>
         </div>
 
         <div class="control-block">
