@@ -8,12 +8,19 @@ import { renderAll } from './render.js';
 
 let tickTimer = null;
 
+// One tick: advance a day, repaint, then stop the run if the bandit went broke.
+function tick() {
+  runOneDay(getState());
+  renderAll(getState());
+  if (getState().banditBankrupt) {
+    document.body.classList.add('bankrupt');
+    if (getState().isPlaying) setPlaying(false); // game over — auto-pause
+  }
+}
+
 function startLoop() {
   stopLoop();
-  tickTimer = setInterval(() => {
-    runOneDay(getState());
-    renderAll(getState());
-  }, 1000 / getState().speed);
+  tickTimer = setInterval(tick, 1000 / getState().speed);
 }
 function stopLoop() { if (tickTimer) { clearInterval(tickTimer); tickTimer = null; } }
 
@@ -27,6 +34,7 @@ function restartSimulation(keepPlaying) {
   const wasPlaying = keepPlaying && getState().isPlaying;
   stopLoop();
   setState(freshState(getState()));
+  document.body.classList.remove('bankrupt'); // fresh budget, back in the game
   renderAll(getState());
   setPlaying(wasPlaying);
 }
@@ -72,6 +80,17 @@ export function bindControls() {
     document.getElementById('delayVal').textContent = getState().convDelay;
   });
 
+  // initial budget — live label, restart on release (it's a starting condition)
+  const budgetSlider = document.getElementById('budgetSlider');
+  budgetSlider.addEventListener('input', () => {
+    document.getElementById('budgetVal').textContent =
+      '$' + parseInt(budgetSlider.value, 10).toLocaleString();
+  });
+  budgetSlider.addEventListener('change', () => {
+    getState().initialBudget = parseInt(budgetSlider.value, 10);
+    restartSimulation(true);
+  });
+
   // speed
   const speedSlider = document.getElementById('speedSlider');
   speedSlider.addEventListener('input', () => {
@@ -86,8 +105,7 @@ export function bindControls() {
   // step one day
   document.getElementById('stepBtn').addEventListener('click', () => {
     setPlaying(false);
-    runOneDay(getState());
-    renderAll(getState());
+    tick();
   });
 
   // reset
@@ -96,5 +114,12 @@ export function bindControls() {
   // reveal true rates
   document.getElementById('revealToggle').addEventListener('change', e => {
     document.body.classList.toggle('reveal', e.target.checked);
+  });
+
+  // headline callout: switch between conversion-regret, profit-regret, budget
+  document.getElementById('metricToggle').addEventListener('change', e => {
+    if (e.target.name !== 'metric') return;
+    document.body.classList.toggle('show-profit', e.target.value === 'profit');
+    document.body.classList.toggle('show-budget', e.target.value === 'budget');
   });
 }

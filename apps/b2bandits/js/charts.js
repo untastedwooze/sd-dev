@@ -13,7 +13,7 @@ Chart.defaults.font.family = "'Oswald', sans-serif";
 Chart.defaults.font.size = 13;
 const GRID = 'rgba(255,243,209,0.12)';
 
-let convChart, armChart;
+let convChart, armChart, bankChart;
 
 export function initCharts() {
   const convCtx = document.getElementById('convChart').getContext('2d');
@@ -59,6 +59,28 @@ export function initCharts() {
       plugins: { legend: { labels: { boxWidth: 18, font: { size: 12 } } } }
     }
   });
+
+  const bankCtx = document.getElementById('bankChart').getContext('2d');
+  bankChart = new Chart(bankCtx, {
+    type: 'line',
+    data: {
+      labels: [],
+      datasets: [
+        { label: 'Bandit bankroll', data: [], borderColor: PALETTE.bandit, backgroundColor: PALETTE.bandit, borderWidth: 3, pointRadius: 0, tension: 0.15 },
+        { label: 'Static A/B bankroll', data: [], borderColor: PALETTE.ab, backgroundColor: PALETTE.ab, borderWidth: 3, borderDash: [7, 5], pointRadius: 0, tension: 0.15 },
+        { label: 'Starting budget', data: [], borderColor: hexA(getCSS('--color-text'), 0.5), borderWidth: 1.5, borderDash: [3, 4], pointRadius: 0 },
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false, animation: false,
+      interaction: { mode: 'index', intersect: false },
+      scales: {
+        x: { title: { display: true, text: 'Day' }, grid: { color: GRID }, ticks: { maxTicksLimit: 10 } },
+        y: { title: { display: true, text: 'Bankroll ($)' }, grid: { color: GRID }, ticks: { callback: v => '$' + Number(v).toLocaleString() } }
+      },
+      plugins: { legend: { labels: { boxWidth: 18, font: { size: 13 } } } }
+    }
+  });
 }
 
 export function renderCharts(state) {
@@ -73,4 +95,10 @@ export function renderCharts(state) {
     armChart.data.datasets[i].data = state.history.map(h => h.armPct[i]);
   }
   armChart.update('none');
+
+  bankChart.data.labels = labels;
+  bankChart.data.datasets[0].data = state.history.map(h => Math.round(h.banditBankroll));
+  bankChart.data.datasets[1].data = state.history.map(h => Math.round(h.abBankroll));
+  bankChart.data.datasets[2].data = state.history.map(() => state.initialBudget);
+  bankChart.update('none');
 }
