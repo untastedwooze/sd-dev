@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Multi-Armed Bandit Demo — Marketing Optimization Simulator</title>
-<meta name="description" content="An interactive demo of multi-armed bandit algorithms (epsilon-greedy &amp; Thompson Sampling) that automatically shift marketing spend toward the best-converting campaign — shown through a B2B toaster sales scenario.">
+<meta name="description" content="An interactive demo of multi-armed bandit algorithms (epsilon-greedy &amp; Thompson Sampling) that automatically shift marketing spend toward the best-converting B2B campaign — instead of splitting budget evenly and waiting for a quarterly report.">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -90,8 +90,8 @@ body::before {
   flex: 0 0 auto;
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 18px;
+  justify-content: flex-end;
+  gap: 16px;
   background: var(--color-accent);
   color: var(--color-text);
   border: var(--border-width) solid var(--color-charcoal);
@@ -100,23 +100,6 @@ body::before {
     var(--shadow-offset) var(--shadow-offset) 0 var(--color-charcoal);
   border-radius: 12px;
   padding: 7px 18px;
-}
-.topbar .brand h1 {
-  font-family: var(--font-display);
-  font-weight: 400;
-  font-size: clamp(1rem, 1.8vw, 1.45rem);
-  line-height: 1.05;
-  margin: 0;
-  letter-spacing: 0.01em;
-  text-shadow: 2px 2px 0 var(--color-charcoal);
-  white-space: nowrap;
-}
-.topbar .brand .tagline {
-  font-family: var(--font-script);
-  font-size: clamp(0.85rem, 1.3vw, 1.1rem);
-  font-weight: 700;
-  display: inline-block;
-  transform: rotate(-2deg);
 }
 .topbar-right {
   display: flex;
@@ -279,11 +262,11 @@ body::before {
   flex: 1 1 auto;
   min-height: 0;
   display: grid;
-  grid-template-columns: 340px 1fr 1fr;
+  grid-template-columns: 340px 1fr 1fr 1fr 1fr;
   grid-template-rows: 1.1fr 0.9fr;
   grid-template-areas:
-    "side chart1 chart2"
-    "side table  table";
+    "side chart1  chart1  chart2  chart2"
+    "side regret  table   table   table";
   gap: 12px;
 }
 
@@ -460,14 +443,18 @@ button.btn:active { transform: translate(3px, 3px); box-shadow: 0 0 0 rgba(0,0,0
 
 /* ---------- regret callout ---------- */
 .regret {
+  grid-area: regret;
   text-align: center;
   background: var(--color-charcoal);
   border: var(--border-width) solid var(--color-charcoal);
   box-shadow:
     inset 0 0 0 3px var(--color-accent),
     var(--shadow-offset) var(--shadow-offset) 0 var(--color-charcoal);
+  border-radius: 10px;
   padding: 12px 14px;
-  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 .regret .regret-flank {
   display: flex;
@@ -605,11 +592,11 @@ body.reveal .true-col { display: table-cell; }
       </div>
       <div class="modal-body">
         <div class="modal-brand">
-          <h2>🍞 The Toaster Co.</h2>
+          <h2>Bandit2Business</h2>
           <span class="tagline">teaching your ad budget to think for itself</span>
         </div>
         <p class="modal-intro">
-          We sell commercial toasters and run four marketing campaigns at once. A
+          Four B2B marketing campaigns compete for the same leads. A
           <b>multi-armed bandit</b> automatically shifts spend toward whatever is
           working right now — instead of splitting budget evenly and waiting for a
           quarterly report. Press <b>Play</b> and watch it discover the best campaign
@@ -625,10 +612,6 @@ body.reveal .true-col { display: table-cell; }
 
   <!-- TOP BAR -->
   <header class="topbar">
-    <div class="brand">
-      <h1>🍞 The Toaster Co.</h1>
-      <span class="tagline">teaching your ad budget to think for itself</span>
-    </div>
     <div class="topbar-right">
       <button class="about-btn" id="aboutBtn">? About</button>
       <div class="byline">Built by <a href="[portfolio URL]">[Your Name]</a></div>
@@ -638,7 +621,7 @@ body.reveal .true-col { display: table-cell; }
   <!-- DASHBOARD -->
   <main class="dash">
 
-    <!-- SIDEBAR: controls + regret -->
+    <!-- SIDEBAR: controls -->
     <div class="side">
 
       <section class="panel controls" aria-label="Simulation controls">
@@ -695,24 +678,6 @@ body.reveal .true-col { display: table-cell; }
         </div>
       </section>
 
-      <section class="panel regret" aria-label="Cumulative regret">
-        <div class="regret-flank">
-          <span class="star"></span>
-          <div>
-            <div class="regret-label">Cumulative Regret</div>
-            <div class="regret-value num" id="regretValue">0</div>
-          </div>
-          <span class="star"></span>
-        </div>
-        <p class="regret-sub">Leads we lost by not always picking the best campaign. Lower is better — a smart bandit keeps it nearly flat.</p>
-        <div class="regret-stats">
-          <span>Day <b class="num" id="statDay">0</b></span>
-          <span>Leads served <b class="num" id="statLeads">0</b></span>
-          <span>Bandit conv. <b class="num" id="statBanditConv">0</b></span>
-          <span>A/B conv. <b class="num" id="statAbConv">0</b></span>
-        </div>
-      </section>
-
     </div>
 
     <!-- CHART 1 -->
@@ -728,6 +693,25 @@ body.reveal .true-col { display: table-cell; }
       <p class="cap">Share of daily leads sent to each campaign. Watch it converge on the winner.</p>
       <div class="chart-box"><canvas id="armChart"></canvas></div>
     </div>
+
+    <!-- REGRET -->
+    <section class="panel regret" aria-label="Cumulative regret">
+      <div class="regret-flank">
+        <span class="star"></span>
+        <div>
+          <div class="regret-label">Cumulative Regret</div>
+          <div class="regret-value num" id="regretValue">0</div>
+        </div>
+        <span class="star"></span>
+      </div>
+      <p class="regret-sub">Leads we lost by not always picking the best campaign. Lower is better — a smart bandit keeps it nearly flat.</p>
+      <div class="regret-stats">
+        <span>Day <b class="num" id="statDay">0</b></span>
+        <span>Leads served <b class="num" id="statLeads">0</b></span>
+        <span>Bandit conv. <b class="num" id="statBanditConv">0</b></span>
+        <span>A/B conv. <b class="num" id="statAbConv">0</b></span>
+      </div>
+    </section>
 
     <!-- TABLE -->
     <div class="card tablecard">
@@ -754,7 +738,7 @@ body.reveal .true-col { display: table-cell; }
    ===================================================================== */
 
 const ARMS = [
-  { name: "LinkedIn Ad",          pitch: "Cut kitchen prep time by 30%",  trueRate: 0.12 },
+  { name: "LinkedIn Ad",          pitch: "Cut operational costs by 30%",   trueRate: 0.12 },
   { name: "Cold Email",           pitch: "Try it free for 30 days",       trueRate: 0.08 },
   { name: "Trade Show Follow-up", pitch: "Bulk discount for fleet orders",trueRate: 0.18 },
   { name: "Newsletter Ad",        pitch: "See your ROI in 6 months",      trueRate: 0.05 },
