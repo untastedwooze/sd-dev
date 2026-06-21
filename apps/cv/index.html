@@ -201,7 +201,8 @@ section { margin-top: 18px; }
 
 /* ---------- print ---------- */
 @media print {
-  body { background: #fff; padding: 0; }
+  @page { margin: 0.35in 0.4in; }
+  body { background: #fff; padding: 0; line-height: 1.25; }
   body::before { display: none; }
   .topbar { display: none; }
   .sheet {
@@ -210,14 +211,25 @@ section { margin-top: 18px; }
     border: none;
     border-radius: 0;
     max-width: none;
-    padding: 0.5in 0.6in;
+    padding: 0;
   }
   a { color: var(--ink); }
+
+  /* tighten vertical rhythm for print */
+  .cv-header { height: auto; margin-bottom: 8px; }
+  section { margin-top: 12px; }
+  .section-title { margin-bottom: 6px; }
+  .skill-line { margin-bottom: 2px; }
+  .job { margin-bottom: 9px; }
+  .job ul { margin-top: 2px; }
+  .job li { margin-bottom: 1px; }
+  .edu { margin-bottom: 7px; }
 }
 </style>
 </head>
 <body>
 <header class="topbar">
+  <button class="nav-btn" type="button" onclick="window.print()">Print</button>
   <a class="nav-btn is-active" href="index.html">CV</a>
   <a class="nav-btn" href="../b2bandits/">B2B</a>
 </header>
