@@ -7,6 +7,7 @@ import { initCharts } from './charts.js';
 import { bindControls, syncEpsilonEnabled } from './controller.js';
 import { renderAll } from './render.js';
 import { initModal } from './modal.js';
+import { initTooltips } from './tooltip.js';
 
 function init() {
   setState(freshState(null));
@@ -15,5 +16,6 @@ function init() {
   syncEpsilonEnabled();
   renderAll(getState());
   initModal();
+  initTooltips();
 }
 init();
