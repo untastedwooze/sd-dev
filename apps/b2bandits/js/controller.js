@@ -116,9 +116,10 @@ export function bindControls() {
     document.body.classList.toggle('reveal', e.target.checked);
   });
 
-  // headline callout: switch between regret view and budget view
+  // headline callout: switch between conversion-regret, profit-regret, budget
   document.getElementById('metricToggle').addEventListener('change', e => {
     if (e.target.name !== 'metric') return;
+    document.body.classList.toggle('show-profit', e.target.value === 'profit');
     document.body.classList.toggle('show-budget', e.target.value === 'budget');
   });
 }

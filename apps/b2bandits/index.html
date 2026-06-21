@@ -149,11 +149,12 @@
     <!-- HEADLINE CALLOUT: regret ⇄ budget -->
     <section class="panel regret" aria-label="Headline metrics">
       <div class="metric-toggle" id="metricToggle" role="tablist" aria-label="Metric view">
-        <label><input type="radio" name="metric" value="regret" checked><span>Regret</span></label>
+        <label><input type="radio" name="metric" value="regret" checked><span>Conv. Regret</span></label>
+        <label><input type="radio" name="metric" value="profit"><span>Profit Regret</span></label>
         <label><input type="radio" name="metric" value="budget"><span>Budget</span></label>
       </div>
 
-      <!-- REGRET VIEW -->
+      <!-- CONVERSION REGRET VIEW -->
       <div class="metric-view metric-regret">
         <div class="regret-flank">
           <span class="star"></span>
@@ -164,9 +165,24 @@
           <span class="star"></span>
         </div>
         <p class="regret-sub">
-          Leads lost by not always picking the best-converting campaign.
-          In dollars, regret is <b class="num" id="profitRegretValue">$0</b> —
-          profit left on the table by not always picking the most <i>profitable</i> one.
+          Leads lost by not always picking the best-<i>converting</i> campaign.
+          Lower is better — a smart bandit keeps it nearly flat.
+        </p>
+      </div>
+
+      <!-- PROFIT REGRET VIEW -->
+      <div class="metric-view metric-profit">
+        <div class="regret-flank">
+          <span class="star"></span>
+          <div>
+            <div class="regret-label">Profit Regret</div>
+            <div class="regret-value num" id="profitRegretValue">$0</div>
+          </div>
+          <span class="star"></span>
+        </div>
+        <p class="regret-sub">
+          Dollars left on the table by not always picking the most <i>profitable</i>
+          campaign — the cost of chasing conversions instead of profit.
         </p>
       </div>
 
