@@ -5,6 +5,7 @@
 import { getState, setState, freshState } from './state.js';
 import { runOneDay } from './simulation.js';
 import { renderAll } from './render.js';
+import { resizeChart } from './charts.js';
 
 let tickTimer = null;
 
@@ -121,5 +122,15 @@ export function bindControls() {
     if (e.target.name !== 'metric') return;
     document.body.classList.toggle('show-profit', e.target.value === 'profit');
     document.body.classList.toggle('show-budget', e.target.value === 'budget');
+  });
+
+  // combined charts: switch which chart is displayed
+  document.getElementById('chartToggle').addEventListener('change', e => {
+    if (e.target.name !== 'chart') return;
+    document.querySelectorAll('.chart-view').forEach(v => {
+      v.classList.toggle('is-active', v.dataset.chart === e.target.value);
+    });
+    // the newly shown chart may have rendered at zero size while hidden
+    resizeChart(e.target.value);
   });
 }

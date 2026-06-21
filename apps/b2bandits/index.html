@@ -125,25 +125,34 @@
 
     </div>
 
-    <!-- CHART 1 -->
-    <div class="card chart1">
-      <h3>Cumulative Conversions</h3>
-      <p class="cap">Selected bandit vs. a static A/B test on the same lead stream. The gap is the bandit's edge.</p>
-      <div class="chart-box"><canvas id="convChart"></canvas></div>
-    </div>
+    <!-- COMBINED CHARTS -->
+    <div class="card charts">
+      <div class="chart-toggle" id="chartToggle" role="tablist" aria-label="Chart view">
+        <label><input type="radio" name="chart" value="conv" checked><span>Conversions</span></label>
+        <label><input type="radio" name="chart" value="arm"><span>Budget Split</span></label>
+        <label><input type="radio" name="chart" value="bank"><span>Bankroll</span></label>
+      </div>
 
-    <!-- CHART 2 -->
-    <div class="card chart2">
-      <h3>Where the Budget Goes</h3>
-      <p class="cap">Share of daily leads sent to each campaign. Watch it converge on the winner.</p>
-      <div class="chart-box"><canvas id="armChart"></canvas></div>
-    </div>
+      <!-- CONVERSIONS VIEW -->
+      <div class="chart-view is-active" data-chart="conv">
+        <h3>Cumulative Conversions</h3>
+        <p class="cap">Selected bandit vs. a static A/B test on the same lead stream. The gap is the bandit's edge.</p>
+        <div class="chart-box"><canvas id="convChart"></canvas></div>
+      </div>
 
-    <!-- CHART 3 -->
-    <div class="card chart3">
-      <h3>Bankroll Over Time</h3>
-      <p class="cap">Money in the bank: bandit vs. static A/B, both starting from the same budget. The bandit compounds profit; the even split drains toward zero.</p>
-      <div class="chart-box"><canvas id="bankChart"></canvas></div>
+      <!-- BUDGET SPLIT VIEW -->
+      <div class="chart-view" data-chart="arm">
+        <h3>Where the Budget Goes</h3>
+        <p class="cap">Share of daily leads sent to each campaign. Watch it converge on the winner.</p>
+        <div class="chart-box"><canvas id="armChart"></canvas></div>
+      </div>
+
+      <!-- BANKROLL VIEW -->
+      <div class="chart-view" data-chart="bank">
+        <h3>Bankroll Over Time</h3>
+        <p class="cap">Money in the bank: bandit vs. static A/B, both starting from the same budget. The bandit compounds profit; the even split drains toward zero.</p>
+        <div class="chart-box"><canvas id="bankChart"></canvas></div>
+      </div>
     </div>
 
     <!-- HEADLINE CALLOUT: regret ⇄ budget -->
