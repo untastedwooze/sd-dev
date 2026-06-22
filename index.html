@@ -121,6 +121,33 @@ body::before {
   font-size: 0.82rem;
   color: var(--chart-gold);
 }
+.contact-btn {
+  position: relative;
+  z-index: 1;
+  display: inline-block;
+  text-decoration: none;
+  cursor: pointer;
+  font-family: var(--font-data);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-size: 0.95rem;
+  color: var(--color-text);
+  background: var(--color-accent);
+  border: 3px solid var(--color-charcoal);
+  box-shadow:
+    inset 0 0 0 3px var(--color-text),
+    6px 6px 0 var(--color-charcoal);
+  border-radius: 12px;
+  padding: 14px 28px;
+  transition: transform 0.06s, box-shadow 0.06s;
+}
+.contact-btn:hover {
+  transform: translate(2px, 2px);
+  box-shadow:
+    inset 0 0 0 3px var(--color-text),
+    4px 4px 0 var(--color-charcoal);
+}
 .footer {
   position: relative;
   z-index: 1;
@@ -155,6 +182,8 @@ body::before {
       <span class="go">View CV →</span>
     </a>
   </nav>
+
+  <a class="contact-btn" href="mailto:duffy.samuel.m@gmail.com?subject=Hello%20Sam">✉ Contact Me</a>
 
   <div class="footer">
     Built by <a href="mailto:duffy.samuel.m@gmail.com">Sam Duffy</a>
