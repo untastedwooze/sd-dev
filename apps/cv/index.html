@@ -82,6 +82,26 @@ body::before {
   padding: 30px 52px 40px;
 }
 
+/* ---------- print action (lives on the sheet, hidden when printing) ---------- */
+.cv-print {
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  font-family: var(--font-body);
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--color-accent);
+  background: transparent;
+  border: 2px solid var(--color-accent);
+  border-radius: 6px;
+  padding: 4px 12px;
+  cursor: pointer;
+  transition: background 0.12s, color 0.12s;
+}
+.cv-print:hover { background: var(--color-accent); color: var(--bg-sheet); }
+
 /* ---------- header (centered, ~1in tall) ---------- */
 .cv-header {
   text-align: center;
@@ -177,6 +197,7 @@ section { margin-top: 18px; }
   body { background: #fff; padding: 0; line-height: 1.25; }
   body::before { display: none; }
   .topbar { display: none; }
+  .cv-print { display: none; }
   .sheet {
     background: #fff;
     box-shadow: none;
@@ -203,6 +224,8 @@ section { margin-top: 18px; }
 <!-- TOP BAR — rendered by shared/header.js -->
 
 <main class="sheet">
+
+  <button class="cv-print" type="button" onclick="window.print()">Print</button>
 
   <header class="cv-header">
     <h1>Sam Duffy</h1>
@@ -310,10 +333,7 @@ section { margin-top: 18px; }
 
 <script type="module">
   import { mountHeader } from '../../shared/header.js';
-  mountHeader({
-    active: 'cv',
-    buttons: [{ label: 'Print', onClick: () => window.print() }],
-  });
+  mountHeader({ active: 'cv' });
 </script>
 </body>
 </html>
