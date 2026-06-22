@@ -162,8 +162,8 @@ section { margin-top: 18px; }
   align-items: baseline;
   gap: 16px;
 }
-.job-title { font-size: 0.96rem; color: var(--ink); font-weight: 600; }
-.job-company { font-size: 0.9rem; color: var(--ink-soft); margin-top: 1px; }
+.job-company { font-size: 0.96rem; color: var(--ink); font-weight: 600; }
+.job-title { font-size: 0.9rem; color: var(--ink-soft); margin-top: 1px; }
 .job-dates { font-size: 0.85rem; color: var(--ink-faint); white-space: nowrap; }
 .job ul { margin: 4px 0 0; padding-left: 19px; }
 .job li { font-size: 0.89rem; color: var(--ink-soft); margin-bottom: 3px; }
@@ -248,26 +248,22 @@ section { margin-top: 18px; }
 
     <div class="job">
       <div class="job-head">
+        <span class="job-company">MFS Investment Management — Boston, MA</span>
+      </div>
+      <div class="job-head">
         <span class="job-title">Quantitative Trading Specialist — Systematic Execution Team</span>
         <span class="job-dates">Apr 2023 – Present</span>
       </div>
-      <div class="job-company">MFS Investment Management — Boston, MA</div>
+      <div class="job-head">
+        <span class="job-title">Senior Software Enginee — Systematic Execution Team</span>
+        <span class="job-dates">Dec 2021 – Apr 2023</span>
+      </div> 
       <ul>
         <li>Spearheaded a custom implementation of KDB Insights, using Python, Q, and Kubernetes to process internal order models and TAQ data of 15,000 securities into KDB.</li>
         <li>Collaborated with portfolio managers and traders to provide actionable insights on the trading cost impact of order decisions, broker toolkits, and global security selection.</li>
         <li>Leveraged statistics to create a multi-faceted Algo Wheel optimizer to reduce the trading cost of the systematic order flow.</li>
         <li>Derived a closed-form solution for the Algo Wheel true-up process, reducing monthly allocation error to below the 5th percentile of the previous solution when validated with Monte-Carlo simulations.</li>
         <li>Developed an internal Impact Cost Model for equities.</li>
-      </ul>
-    </div>
-
-    <div class="job">
-      <div class="job-head">
-        <span class="job-title">Senior Software Engineer — Trading Data Analytics Team</span>
-        <span class="job-dates">Dec 2021 – Apr 2023</span>
-      </div>
-      <div class="job-company">MFS Investment Management — Boston, MA</div>
-      <ul>
         <li>Created complex Tableau dashboards to give equity traders insight into broker algo performance.</li>
         <li>Developed internal Python libraries to enable rapid prototyping and development of various model pipelines with optional features like bootstrapping, bagging, and stratified sampling.</li>
         <li>Developed Python libraries to extract EMS execution and order data via API endpoints.</li>
@@ -275,23 +271,15 @@ section { margin-top: 18px; }
         <li>Used KNN clustering and stratified resampling to compare broker performance across diverse order flows.</li>
       </ul>
     </div>
-
-    <!-- <div class="job">
-      <div class="job-head">
-        <span class="job-title">Machine Learning Engineer</span>
-        <span class="job-dates">Feb 2021 – Dec 2021</span>
-      </div>
-      <div class="job-company">Raytheon Missile &amp; Defense — Tewksbury, MA</div>
-      <ul>
-      </ul>
-    </div> -->
-    
+        
     <div class="job">
+      <div class="job-head">
+        <span class="job-company">Raytheon Missile &amp; Defense — Tewksbury, MA</span>
+      </div>
       <div class="job-head">
         <span class="job-title">Systems Engineer — PATRIOT Surveillance Radar</span>
         <span class="job-dates">Jun 2020 – Dec 2021</span>
       </div>
-      <div class="job-company">Raytheon Missile &amp; Defense — Tewksbury, MA</div>
       <ul>
         <li>Developed a suite of tools for rapid data extraction, display, and analysis using OOP techniques.</li>
         <li>Completed root-cause analysis of defects spanning all parts of the PATRIOT Surveillance systems.</li>
