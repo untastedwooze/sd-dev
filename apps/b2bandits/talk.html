@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Talk — Bandit2Business</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Alfa+Slab+One&family=Caveat:wght@600;700&family=Oswald:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="css/styles.css">
+<style>
+  body {
+    height: auto;
+    overflow: auto;
+    display: block;
+    padding: 0 0 48px;
+  }
+
+  .talk-wrap {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 40px 20px 0;
+  }
+
+  .talk-header {
+    margin-bottom: 28px;
+  }
+
+  .talk-title {
+    font-family: var(--font-display);
+    font-size: clamp(1.6rem, 4vw, 2.8rem);
+    line-height: 1.1;
+    margin: 0 0 10px;
+    text-shadow: 3px 3px 0 var(--color-charcoal);
+  }
+
+  .talk-meta {
+    font-family: var(--font-script);
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--chart-gold);
+    display: inline-block;
+    transform: rotate(-1.5deg);
+  }
+
+  .video-frame {
+    position: relative;
+    background: var(--color-panel);
+    border: var(--border-width) solid var(--color-charcoal);
+    box-shadow:
+      inset 0 0 0 3px var(--color-text),
+      8px 8px 0 var(--color-charcoal);
+    border-radius: 12px;
+    overflow: hidden;
+    aspect-ratio: 16 / 9;
+  }
+
+  .video-frame iframe {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border: none;
+    display: block;
+  }
+</style>
+</head>
+<body>
+
+  <!-- TOP BAR -->
+  <header class="topbar">
+    <div class="topbar-right">
+      <a class="about-btn" href="../cv/">CV</a>
+      <a class="about-btn" href="index.html">B2B</a>
+      <a class="about-btn is-active" href="talk.html">Talk</a>
+    </div>
+  </header>
+
+  <div class="talk-wrap">
+    <div class="talk-header">
+      <h1 class="talk-title">The Talk</h1>
+      <span class="talk-meta">watch it here</span>
+    </div>
+
+    <div class="video-frame">
+      <iframe
+        src="https://www.youtube.com/embed/Cz7ylnDc9J0"
+        title="Talk video"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+        allowfullscreen>
+      </iframe>
+    </div>
+  </div>
+
+</body>
+</html>
