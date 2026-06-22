@@ -158,15 +158,6 @@ body::before {
   gap: 12px;
   margin-top: auto;
 }
-.modal-byline {
-  font-size: 0.75rem;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  font-weight: 500;
-  opacity: 0.8;
-}
-.modal-byline a { color: var(--color-text); text-decoration: underline; text-underline-offset: 3px; }
-.modal-byline a:hover { color: #FFE9A8; }
 
 .modal-close {
   font-family: var(--font-data);
@@ -354,9 +345,9 @@ input[type="range"]::-moz-range-thumb {
   max-width: 240px;
   padding: 7px 10px;
   background: var(--color-charcoal);
-  color: var(--color-bg);
+  color: var(--color-text);
   border-radius: 6px;
-  font-size: 0.72rem;
+  font-size: 0.82rem;
   font-weight: 400;
   line-height: 1.3;
   text-transform: none;
@@ -463,6 +454,9 @@ button.btn:active { transform: translate(3px, 3px); box-shadow: 0 0 0 rgba(0,0,0
   line-height: 1;
   color: var(--chart-gold);
   margin: 2px 0;
+  min-width: 9ch;
+  min-height: 1em;
+  font-variant-numeric: tabular-nums;
 }
 .regret-sub { font-weight: 400; font-size: 0.82rem; line-height: 1.3; margin: 6px auto 0; opacity: 0.92; }
 .regret-stats {
