@@ -67,60 +67,11 @@ body::before {
 }
 
 /* =====================================================================
-   TOP BAR — slim brand strip (no intro; intro lives in the welcome modal)
+   TOP BAR — shared header (styles in ../../shared/header.css).
+   Only the page-specific positioning lives here: bleed the bar into the
+   body's 12px / 16px padding so it spans the full width.
    ===================================================================== */
-.topbar {
-  position: sticky;
-  top: 0;
-  z-index: 10;
-  flex: 0 0 auto;
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  gap: 16px;
-  background: var(--color-accent);
-  color: var(--color-text);
-  border: none;
-  border-bottom: var(--border-width) solid var(--color-charcoal);
-  box-shadow: inset 0 0 0 3px var(--color-text);
-  border-radius: 0;
-  padding: 10px 18px;
-  margin: -12px -16px 0;
-}
-.topbar-right {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-}
-.byline {
-  font-size: 0.78rem;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  font-weight: 500;
-  text-align: right;
-  white-space: nowrap;
-}
-.byline a { color: var(--color-text); text-decoration: underline; text-underline-offset: 3px; }
-.byline a:hover { color: #FFE9A8; }
-.about-btn {
-  font-family: var(--font-data);
-  font-size: 0.75rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  color: var(--color-text);
-  background: transparent;
-  border: 2px solid rgba(255,243,209,0.45);
-  border-radius: 6px;
-  padding: 4px 10px;
-  cursor: pointer;
-  white-space: nowrap;
-  text-decoration: none;
-  display: inline-block;
-  transition: background 0.12s, border-color 0.12s;
-}
-.about-btn:hover { background: rgba(255,243,209,0.12); border-color: var(--color-text); }
-.about-btn.is-active { background: var(--color-text); color: var(--color-accent); border-color: var(--color-text); }
+.topbar { margin: -12px -16px 0; }
 
 /* =====================================================================
    WELCOME MODAL
@@ -697,7 +648,6 @@ body.reveal .true-col { display: table-cell; }
   body { height: auto; overflow: auto; display: block; padding: 14px; }
   .topbar { flex-wrap: wrap; justify-content: center; text-align: center; gap: 8px; margin-bottom: 12px; }
   .topbar-right { justify-content: center; }
-  .byline { text-align: center; }
   .dash { display: block; }
   .side { display: block; overflow: visible; }
   .controls, .regret { margin-bottom: 12px; }

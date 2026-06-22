@@ -1,0 +1,69 @@
+/* =====================================================================
+   SHARED SITE HEADER — slim top navigation bar
+   Single source of truth for the persistent header across all apps.
+   Pair with shared/header.js, which renders the markup.
+
+   Styling adapts to each host page via CSS custom properties, with
+   sensible fallbacks so the bar looks right even on a page that only
+   defines some of them:
+     --color-accent     bar background
+     --color-text       button / label colour
+     --color-charcoal   bottom border
+     --border-width     bottom border thickness
+     --font-data        button font family
+   The host page is responsible only for positioning (margins), since
+   that depends on its own body / container padding.
+   ===================================================================== */
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 16px;
+  background: var(--color-accent, #9E2A2B);
+  color: var(--color-text, #FFF3D1);
+  border: none;
+  border-bottom: var(--border-width, 3px) solid var(--color-charcoal, #212529);
+  box-shadow: inset 0 0 0 3px var(--color-text, #FFF3D1);
+  border-radius: 0;
+  padding: 10px 18px;
+}
+.topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.about-btn {
+  font-family: var(--font-data, system-ui, -apple-system, sans-serif);
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--color-text, #FFF3D1);
+  background: transparent;
+  border: 2px solid rgba(255, 243, 209, 0.45);
+  border-radius: 6px;
+  padding: 4px 10px;
+  cursor: pointer;
+  white-space: nowrap;
+  text-decoration: none;
+  display: inline-block;
+  transition: background 0.12s, border-color 0.12s;
+}
+.about-btn:hover {
+  background: rgba(255, 243, 209, 0.12);
+  border-color: var(--color-text, #FFF3D1);
+}
+.about-btn.is-active {
+  background: var(--color-text, #FFF3D1);
+  color: var(--color-accent, #9E2A2B);
+  border-color: var(--color-text, #FFF3D1);
+}
+
+@media (max-width: 700px) {
+  .topbar { flex-wrap: wrap; justify-content: center; text-align: center; gap: 8px; }
+  .topbar-right { justify-content: center; }
+}

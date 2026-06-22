@@ -12,6 +12,7 @@
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 
+<link rel="stylesheet" href="../../shared/header.css">
 <link rel="stylesheet" href="css/styles.css">
 </head>
 <body class="">
@@ -43,13 +44,7 @@
     </div>
   </div>
 
-  <!-- TOP BAR -->
-  <header class="topbar">
-    <div class="topbar-right">
-      <a class="about-btn" href="../cv/">CV</a>
-      <a class="about-btn is-active" href="index.html">B2B</a>
-    </div>
-  </header>
+  <!-- TOP BAR — rendered by shared/header.js -->
 
   <!-- BANKRUPT BANNER -->
   <div class="bankrupt-banner" id="bankruptBanner" role="status">
@@ -242,6 +237,10 @@
 
   </main>
 
+<script type="module">
+  import { mountHeader } from '../../shared/header.js';
+  mountHeader({ active: 'b2bandits' });
+</script>
 <script type="module" src="js/main.js"></script>
 </body>
 </html>
