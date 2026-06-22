@@ -5,8 +5,8 @@ export const resumeData = {
   },
 
   skills: [
-    { label: "Languages",           value: "Python, Q, SQL, KDB, MATLAB" },
-    { label: "Data & Tools",        value: "Tableau, Azure Blob Storage, Bloomberg Data License" },
+    { label: "Languages",           value: "Python, SQL, Q, KDB, MATLAB" },
+    { label: "Tools",        value: "Claude Code, Github Copilot, Tableau, Azure Blob Storage, Snowflake" },
     { label: "Platforms & Methods", value: "Linux, Kubernetes, Optimization, Statistics, Applied Machine Learning" },
   ],
 
@@ -20,15 +20,16 @@ export const resumeData = {
       bullets: [
         {
           items: [
-            "Analyzed $60B+ in annual transaction flow to identify performance drivers, presenting findings and recommendations directly to senior leadership",
-            "Built and maintained dashboards used by leadership and stakeholders globally to track KPIs and make faster, better-informed operational calls",
-            "Built pre-trade market impact forecasts using statistical regression and industry research, work that translates directly to forecasting marketing performance and campaign impact",
-            "Used KNN clustering and multivariate statistical methods to segment counterparties and identify the best matches, the same core skillset used in audience segmentation and targeting",
-            "Designed a closed-form optimization algorithm that improved monthly order allocation accuracy by roughly $80M",
-            "Built ETL pipelines and data models from scratch to handle high-volume datasets that previously had no structured pipeline",
-            "Wrote Python libraries (bootstrapping, bagging, stratified sampling) so the team could prototype statistical models in days instead of weeks",
-            "Set up automated job scheduling that cut down on manual, repetitive reporting work",
-            "Led the build-out of a time-series database on Azure and Kubernetes, replacing a system that kept falling over under load",
+            "Identified optimization opportunities in $60B+ worth of annual order flow, presented findings and recommendations directly to senior leadership",
+            "Leveraged Claude Skills to automate system issue diagnosis and triage resolution, significantly increasing time spent on building analytics rather than troubleshooting",
+            "Presented first time insights into the quality of large liquidity events by creating an AI-assisted parser that normalized unstructured emails",
+            "Built and maintained dashboards used by leadership and global stakeholders to track KPIs and make faster, better-informed decisions",
+            "Ran segmentation studies using various clustering and multivariate statistical methods to identify which counterparties were best suited for specific order characteristics",
+            "Improved monthly order allocation accuracy by roughly $80M by deriving a closed-form optimization algorithm for our automated order router",
+            "Built most of our end-to-end ETL pipelines and data models",
+            "Reduced statistical model prototyping time by writing libraries to handle statistical methods such as bootstrapping, bagging, and stratified sampling",
+            "Created a full stack job scheduler that handles all of our automated jobs and complex dependency management",
+            "Led the build-out of KX Insights, a specialized time-series database deployed on Azure and Kubernetes, enabling us to run more advanced analytics",
             "Worked closely with engineering to set data standards and catch integrity issues before they hit downstream reports",
           ],
         },
@@ -44,11 +45,11 @@ export const resumeData = {
         {
           items: [
             "Developed a suite of tools for rapid data extraction, display, and analysis using OOP techniques.",
-            "Completed root-cause analysis of defects spanning all parts of the PATRIOT Surveillance systems.",
-            "Led the test team of an internal Radar & Missile Simulation project, designing and executing the functional requirement test plans.",
-            "Automated the annual verification process of complex functional requirements, reducing weeks of analysis to under a minute.",
+            "Completed root-cause analysis of defects spanning all systems in the PATRIOT Surveillance Radar.",
             "Led a team of engineers to integrate several custom machine learning models to detect anomalous flight patterns for air traffic controllers.",
             "Used TensorFlow and Keras to develop a custom TadGAN machine learning model and training functions for each of its networks.",
+            "Led the test team of an internal Radar & Missile Simulation project, designing and executing the functional requirement test plans.",
+            "Automated the annual verification process of complex functional requirements, reducing weeks of analysis to under a minute.",
           ],
         },
       ],
