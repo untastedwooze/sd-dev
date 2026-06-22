@@ -169,6 +169,16 @@ section { margin-top: 18px; }
 .job ul { margin: 4px 0 0; padding-left: 19px; }
 .job li { font-size: 0.89rem; color: var(--ink-soft); margin-bottom: 3px; }
 .job li::marker { color: var(--color-accent); }
+.bullet-group { margin-top: 2px; }
+.bullet-group-label {
+  display: block;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--ink-faint);
+  margin: 7px 0 1px;
+}
 
 /* ---------- education ---------- */
 .edu { margin-bottom: 10px; }
@@ -218,112 +228,88 @@ section { margin-top: 18px; }
   .job ul { margin-top: 2px; }
   .job li { margin-bottom: 1px; }
   .edu { margin-bottom: 7px; }
+  .bullet-group { margin-top: 1px; }
+  .bullet-group-label { margin: 4px 0 1px; }
 }
 </style>
 </head>
 <body>
 <!-- TOP BAR — rendered by shared/header.js -->
 
-<main class="sheet">
-
-  <button class="cv-print" type="button" onclick="window.print()">Print</button>
-
-  <header class="cv-header">
-    <h1>Sam Duffy</h1>
-    <div class="contact">
-      <span class="sep">·</span>
-      <a href="mailto:samuel.duffy.work@gmail.com">samuel.duffy.work@gmail.com</a>
-    </div>
-  </header>
-
-  <section>
-    <h2 class="section-title">Skills</h2>
-    <p class="skill-line"><b>Languages:</b> Python, Q, SQL, KDB, MATLAB</p>
-    <p class="skill-line"><b>Data &amp; Tools:</b> Tableau, Azure Blob Storage, Bloomberg Data License</p>
-    <p class="skill-line"><b>Platforms &amp; Methods:</b> Linux, Kubernetes, Optimization, Statistics, Applied Machine Learning</p>
-  </section>
-
-  <section>
-    <h2 class="section-title">Experience</h2>
-
-    <div class="job">
-      <div class="job-head">
-        <span class="job-company">MFS Investment Management — Boston, MA</span>
-      </div>
-      <div class="job-head">
-        <span class="job-title">Quantitative Trading Specialist — Systematic Execution Team</span>
-        <span class="job-dates">Apr 2023 – Present</span>
-      </div>
-      <div class="job-head">
-        <span class="job-title">Senior Software Engineer — Systematic Execution Team</span>
-        <span class="job-dates">Dec 2021 – Apr 2023</span>
-      </div> 
-      <ul>
-        <li>Analyzed $60B+ in annual transaction flow to identify performance drivers, presenting findings and recommendations directly to senior leadership</li>
-        <li>Built and maintained dashboards used by leadership and stakeholders globally to track KPIs and make faster, better-informed operational calls</li>
-        <li>Built pre-trade market impact forecasts using statistical regression and industry research, work that translates directly to forecasting marketing performance and campaign impact</li>
-        <li>Used KNN clustering and multivariate statistical methods to segment counterparties and identify the best matches, the same core skillset used in audience segmentation and targeting</li>
-        <li>Designed a closed-form optimization algorithm that improved monthly order allocation accuracy by roughly $80M</li>
-        <li>Built ETL pipelines and data models from scratch to handle high-volume datasets that previously had no structured pipeline</li>
-        <li>Wrote Python libraries (bootstrapping, bagging, stratified sampling) so the team could prototype statistical models in days instead of weeks</li>
-        <li>Set up automated job scheduling that cut down on manual, repetitive reporting work</li>
-        <li>Led the build-out of a time-series database on Azure and Kubernetes, replacing a system that kept falling over under load</li>
-        <li>Worked closely with engineering to set data standards and catch integrity issues before they hit downstream reports</li>      </ul>
-    </div>
-        
-    <div class="job">
-      <div class="job-head">
-        <span class="job-company">Raytheon Missile &amp; Defense — Tewksbury, MA</span>
-      </div>
-      <div class="job-head">
-        <span class="job-title">Systems Engineer — PATRIOT Surveillance Radar</span>
-        <span class="job-dates">Jun 2020 – Dec 2021</span>
-      </div>
-      <ul>
-        <li>Developed a suite of tools for rapid data extraction, display, and analysis using OOP techniques.</li>
-        <li>Completed root-cause analysis of defects spanning all parts of the PATRIOT Surveillance systems.</li>
-        <li>Led the test team of an internal Radar &amp; Missile Simulation project, designing and executing the functional requirement test plans.</li>
-        <li>Automated the annual verification process of complex functional requirements, reducing weeks of analysis to under a minute.</li>
-        <li>Led a team of engineers to integrate several custom machine learning models to detect anomalous flight patterns for air traffic controllers.</li>
-        <li>Used TensorFlow and Keras to develop a custom TadGAN machine learning model and training functions for each of its networks.</li>
-      </ul>
-    </div>
-
-    <div class="job">
-      <div class="job-head">
-        <span class="job-company">The Applied Research Lab — State College, PA</span>
-      </div>
-      <div class="job-head">
-        <span class="job-title">Distinguished Undergraduate Researcher</span>
-        <span class="job-dates">May 2018 – May 2020</span>
-      </div>
-      
-      <ul>
-        <li>Completed a thesis on applied swarm intelligence, documenting multi-modular neural network architectures, meta-heuristic optimization algorithms, and multi-agent systems.</li>
-        <li>Developed an original algorithm to model the stalk-and-ambush hunting behavior of lions for multi-predator, single-prey scenarios.</li>
-      </ul>
-    </div>
-  </section>
-
-  <section>
-    <h2 class="section-title">Education</h2>
-
-    <div class="edu">
-      <div class="edu-row top">
-        <b>The Pennsylvania State University</b>
-        <span class="date">Spring 2020</span>
-      </div>
-      <div class="edu-row sub">
-        <span>B.S. in Mechanical Engineering — University Park, PA</span>
-      </div>
-    </div>
-  </section>
-
-</main>
+<main class="sheet" id="cv-sheet"></main>
 
 <script type="module">
   import { mountHeader } from '../../shared/header.js';
+  import { resumeData as d } from './cv-data.js';
+
   mountHeader({ active: 'cv' });
+
+  function esc(s) {
+    return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  }
+
+  function renderBulletGroups(groups) {
+    return groups.map(g => `
+      <div class="bullet-group">
+        ${g.group ? `<span class="bullet-group-label">${esc(g.group)}</span>` : ''}
+        <ul>${g.items.map(b => `<li>${esc(b)}</li>`).join('')}</ul>
+      </div>
+    `).join('');
+  }
+
+  function renderExperience(jobs) {
+    return jobs.map(job => `
+      <div class="job">
+        <div class="job-head">
+          <span class="job-company">${esc(job.company)}</span>
+        </div>
+        ${job.roles.map(r => `
+          <div class="job-head">
+            <span class="job-title">${esc(r.title)}</span>
+            <span class="job-dates">${esc(r.dates)}</span>
+          </div>
+        `).join('')}
+        ${renderBulletGroups(job.bullets)}
+      </div>
+    `).join('');
+  }
+
+  document.getElementById('cv-sheet').innerHTML = `
+    <button class="cv-print" type="button" onclick="window.print()">Print</button>
+
+    <header class="cv-header">
+      <h1>${esc(d.name)}</h1>
+      <div class="contact">
+        <span class="sep">·</span>
+        <a href="mailto:${esc(d.contact.email)}">${esc(d.contact.email)}</a>
+      </div>
+    </header>
+
+    <section>
+      <h2 class="section-title">Skills</h2>
+      ${d.skills.map(s => `<p class="skill-line"><b>${esc(s.label)}:</b> ${esc(s.value)}</p>`).join('')}
+    </section>
+
+    <section>
+      <h2 class="section-title">Experience</h2>
+      ${renderExperience(d.experience)}
+    </section>
+
+    <section>
+      <h2 class="section-title">Education</h2>
+      ${d.education.map(e => `
+        <div class="edu">
+          <div class="edu-row top">
+            <b>${esc(e.institution)}</b>
+            <span class="date">${esc(e.date)}</span>
+          </div>
+          <div class="edu-row sub">
+            <span>${esc(e.degree)}</span>
+          </div>
+        </div>
+      `).join('')}
+    </section>
+  `;
 </script>
 </body>
 </html>
