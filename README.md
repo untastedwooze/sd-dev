@@ -52,19 +52,26 @@ Actions**. After that, every push to `main` deploys via the workflow.
 Without a custom domain the site is reachable at
 `https://untastedwooze.github.io/b2bandits/`.
 
-### 2. Register a custom domain (optional)
+### 2. Custom domain
 
-You don't need a domain to go live, but to use one, register a name at any
-registrar — good options: **Cloudflare Registrar** (at-cost, but the domain's
-nameservers must move to Cloudflare), **Porkbun**, or **Namecheap**. A `.com` is
-typically ~$10–15/yr.
+The site uses **`samuelduffy.dev`**, registered at **Porkbun**. The repo-root
+`CNAME` file already contains `samuelduffy.dev`, so GitHub serves the apex and
+auto-redirects `www.samuelduffy.dev` → apex.
 
-### 3. Point the domain at GitHub Pages (apex + www)
+> **`.dev` is HTTPS-only.** The `.dev` TLD is on the browser HSTS preload list,
+> so the site won't load over plain HTTP at all. GitHub Pages provisions HTTPS
+> automatically, but expect a short window after DNS resolves where the cert
+> isn't ready yet and the site won't load — then it works.
 
-Once you own `yourdomain.com`, add **both** of these in the registrar's DNS
-panel:
+### 3. Point the domain at GitHub Pages (Porkbun DNS)
 
-- **Apex** (`yourdomain.com`) — four `A` records to the GitHub Pages IPs:
+In Porkbun: **Domain Management → `samuelduffy.dev` → DNS / Edit records**.
+
+First **delete Porkbun's default records** for the domain (the parking `ALIAS`
+on the apex and the default `www` record) so they don't conflict. Then add:
+
+- **Apex** — four `A` records. Host field **left blank** (= `samuelduffy.dev`),
+  one record per IP:
 
   ```
   185.199.108.153
@@ -73,7 +80,7 @@ panel:
   185.199.111.153
   ```
 
-  Optionally also the IPv6 `AAAA` records:
+  Optionally also four `AAAA` records (host blank) for IPv6:
 
   ```
   2606:50c0:8000::153
@@ -82,25 +89,15 @@ panel:
   2606:50c0:8003::153
   ```
 
-- **www** (`www.yourdomain.com`) — one `CNAME` record pointing to
-  `untastedwooze.github.io`.
+- **www** — one `CNAME` record. Host = `www`, Answer = `untastedwooze.github.io`.
 
-> **Using Cloudflare for DNS?** Set these records to **DNS-only (grey cloud)**,
-> not proxied (orange cloud), so GitHub Pages can issue its own HTTPS cert.
+(Porkbun also supports an `ALIAS` record on the apex pointing to
+`untastedwooze.github.io` as an alternative to the four `A` records — either
+approach works.)
 
-### 4. Tell GitHub the domain
+### 4. Finish in GitHub
 
-- Create a file named `CNAME` at the repo root containing **only** your apex
-  domain, e.g.:
-
-  ```
-  yourdomain.com
-  ```
-
-- Then in **Settings → Pages → Custom domain**, enter `yourdomain.com`, wait for
-  the DNS check to pass, and enable **Enforce HTTPS** (may take a few minutes
-  while the certificate is provisioned).
-
-With the apex in the `CNAME` file, GitHub serves `yourdomain.com` and
-automatically redirects `www.yourdomain.com` → apex. DNS changes can take
-minutes to a few hours to propagate.
+In **Settings → Pages → Custom domain**, enter `samuelduffy.dev`, wait for the
+DNS check to pass, then enable **Enforce HTTPS** (may take a few minutes while
+the certificate is provisioned). DNS changes can take minutes to a few hours to
+propagate.
