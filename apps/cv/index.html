@@ -156,9 +156,6 @@ section { margin-top: 18px; }
   border-bottom: 2px solid var(--rule);
 }
 
-/* ---------- summary ---------- */
-.summary { font-size: 0.92rem; color: var(--ink-soft); margin: 0; }
-
 /* ---------- skills ---------- */
 .skill-line { font-size: 0.9rem; color: var(--ink-soft); margin: 0 0 4px; }
 .skill-line:last-child { margin-bottom: 0; }
@@ -173,8 +170,8 @@ section { margin-top: 18px; }
   align-items: baseline;
   gap: 16px;
 }
-.job-title { font-size: 0.96rem; color: var(--ink-soft); }
-.job-title b { color: var(--ink); font-weight: 600; }
+.job-title { font-size: 0.96rem; color: var(--ink); font-weight: 600; }
+.job-company { font-size: 0.9rem; color: var(--ink-soft); margin-top: 1px; }
 .job-dates { font-size: 0.85rem; color: var(--ink-faint); white-space: nowrap; }
 .job ul { margin: 4px 0 0; padding-left: 19px; }
 .job li { font-size: 0.89rem; color: var(--ink-soft); margin-bottom: 3px; }
@@ -241,18 +238,12 @@ section { margin-top: 18px; }
 
   <header class="cv-header">
     <h1>Sam Duffy</h1>
-    <div class="role">Quantitative Developer</div>
     <div class="contact">
       <a href="tel:+12672272041">(267) 227-2041</a>
       <span class="sep">·</span>
       <a href="mailto:duffy.samuel.m@gmail.com">duffy.samuel.m@gmail.com</a>
     </div>
   </header>
-
-  <section>
-    <h2 class="section-title">Summary</h2>
-    <p class="summary">Quantitative developer with seven years of combined experience in applying Machine Learning and Statistics across Financial Market and Defense domains.</p>
-  </section>
 
   <section>
     <h2 class="section-title">Skills</h2>
@@ -266,9 +257,10 @@ section { margin-top: 18px; }
 
     <div class="job">
       <div class="job-head">
-        <span class="job-title"><b>Quantitative Trading Associate — Systematic Execution Team</b>, MFS Investment Management — Boston, MA</span>
+        <span class="job-title">Quantitative Trading Associate — Systematic Execution Team</span>
         <span class="job-dates">Apr 2023 – Present</span>
       </div>
+      <div class="job-company">MFS Investment Management — Boston, MA</div>
       <ul>
         <li>Spearheaded a custom implementation of KDB Insights, using Python, Q, and Kubernetes to process internal order models and TAQ data of 15,000 securities into KDB.</li>
         <li>Collaborated with portfolio managers and traders to provide actionable insights on the trading cost impact of order decisions, broker toolkits, and global security selection.</li>
@@ -280,9 +272,10 @@ section { margin-top: 18px; }
 
     <div class="job">
       <div class="job-head">
-        <span class="job-title"><b>Senior Software Engineer — Trading Data Analytics Team</b>, MFS Investment Management — Boston, MA</span>
+        <span class="job-title">Senior Software Engineer — Trading Data Analytics Team</span>
         <span class="job-dates">Dec 2021 – Apr 2023</span>
       </div>
+      <div class="job-company">MFS Investment Management — Boston, MA</div>
       <ul>
         <li>Created complex Tableau dashboards to give equity traders insight into broker algo performance.</li>
         <li>Developed internal Python libraries to enable rapid prototyping and development of various model pipelines with optional features like bootstrapping, bagging, and stratified sampling.</li>
@@ -294,9 +287,10 @@ section { margin-top: 18px; }
 
     <div class="job">
       <div class="job-head">
-        <span class="job-title"><b>Machine Learning Engineer</b>, Raytheon Missile &amp; Defense — Tewksbury, MA</span>
+        <span class="job-title">Machine Learning Engineer</span>
         <span class="job-dates">Feb 2021 – Dec 2021</span>
       </div>
+      <div class="job-company">Raytheon Missile &amp; Defense — Tewksbury, MA</div>
       <ul>
         <li>Led a team of engineers to integrate several custom machine learning models to detect anomalous flight patterns for air traffic controllers.</li>
         <li>Used TensorFlow and Keras to develop a custom TadGAN machine learning model and training functions for each of its networks.</li>
@@ -305,9 +299,10 @@ section { margin-top: 18px; }
 
     <div class="job">
       <div class="job-head">
-        <span class="job-title"><b>Systems Engineer — PATRIOT Surveillance Radar</b>, Raytheon Missile &amp; Defense — Tewksbury, MA</span>
+        <span class="job-title">Systems Engineer — PATRIOT Surveillance Radar</span>
         <span class="job-dates">Jun 2020 – Dec 2021</span>
       </div>
+      <div class="job-company">Raytheon Missile &amp; Defense — Tewksbury, MA</div>
       <ul>
         <li>Developed a suite of tools for rapid data extraction, display, and analysis using OOP techniques.</li>
         <li>Completed root-cause analysis of defects spanning all parts of the PATRIOT Surveillance systems.</li>
@@ -318,9 +313,10 @@ section { margin-top: 18px; }
 
     <div class="job">
       <div class="job-head">
-        <span class="job-title"><b>Distinguished Undergraduate Researcher</b>, The Applied Research Lab — State College, PA</span>
+        <span class="job-title">Distinguished Undergraduate Researcher</span>
         <span class="job-dates">May 2018 – May 2020</span>
       </div>
+      <div class="job-company">The Applied Research Lab — State College, PA</div>
       <ul>
         <li>Completed a thesis on applied swarm intelligence, documenting multi-modular neural network architectures, meta-heuristic optimization algorithms, and multi-agent systems.</li>
         <li>Developed an original algorithm to model the stalk-and-ambush hunting behavior of lions for multi-predator, single-prey scenarios.</li>
