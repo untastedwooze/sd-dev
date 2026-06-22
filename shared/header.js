@@ -15,8 +15,9 @@
 
 // Order here is the order shown in the nav.
 const APPS = [
-  { id: 'cv',        label: 'CV',  href: 'cv/' },
-  { id: 'b2bandits', label: 'B2B', href: 'b2bandits/' },
+  { id: 'cv',        label: 'CV',   href: 'cv/' },
+  { id: 'b2bandits', label: 'B2B',  href: 'b2bandits/' },
+  { id: 'talk',      label: 'Talk', href: 'talk.html' },
 ];
 
 /**
