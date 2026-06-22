@@ -57,7 +57,7 @@ export function mountHeader({ active = '', basePath = '../', buttons = [] } = {}
   // Contact link — opens the visitor's email client to message Sam.
   const contact = document.createElement('a');
   contact.className = 'about-btn';
-  contact.href = 'mailto:duffy.samuel.m@gmail.com?subject=Hello%20Sam';
+  contact.href = 'mailto:samuel.duffy.work@gmail.com?subject=Hello%20Sam';
   contact.textContent = 'Contact';
   right.appendChild(contact);
 
