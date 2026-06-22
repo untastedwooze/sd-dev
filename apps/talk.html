@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Talk: Claude Skills for High Scale Quant Workflows</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Alfa+Slab+One&family=Caveat:wght@600;700&family=Oswald:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="../shared/header.css">
+<link rel="stylesheet" href="b2bandits/css/styles.css">
+<style>
+  body {
+    height: auto;
+    overflow: auto;
+    display: block;
+    padding: 0 0 48px;
+  }
+
+  .talk-wrap {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 40px 20px 0;
+  }
+
+  .talk-header {
+    margin-bottom: 28px;
+  }
+
+  .talk-title {
+    font-family: var(--font-data);
+    font-weight: 300;
+    font-size: clamp(1.8rem, 4vw, 3.2rem);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    line-height: 1.1;
+    margin: 0 0 10px;
+    text-shadow: 2px 2px 0 var(--color-charcoal);
+  }
+
+  .talk-meta {
+    font-family: var(--font-script);
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--chart-gold);
+    display: inline-block;
+    transform: rotate(-1.5deg);
+  }
+
+  .video-frame {
+    position: relative;
+    background: var(--color-panel);
+    border: var(--border-width) solid var(--color-charcoal);
+    box-shadow:
+      inset 0 0 0 3px var(--color-text),
+      8px 8px 0 var(--color-charcoal);
+    border-radius: 12px;
+    overflow: hidden;
+    aspect-ratio: 16 / 9;
+  }
+
+  .video-frame iframe {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border: none;
+    display: block;
+  }
+
+  .talk-description {
+    margin-top: 32px;
+    background: var(--color-panel);
+    border: var(--border-width) solid var(--color-charcoal);
+    box-shadow:
+      inset 0 0 0 3px var(--color-text),
+      6px 6px 0 var(--color-charcoal);
+    border-radius: 10px;
+    padding: 28px 32px;
+  }
+
+  .talk-description p {
+    font-size: 1rem;
+    line-height: 1.65;
+    margin: 0 0 1em;
+    opacity: 0.9;
+  }
+
+  .talk-description p:last-child {
+    margin-bottom: 0;
+  }
+</style>
+</head>
+<body>
+
+  <!-- TOP BAR — rendered by shared/header.js -->
+
+  <div class="talk-wrap">
+    <div class="talk-header">
+      <h1 class="talk-title">Talk: Claude Skills for High Scale Quant Workflows</h1>
+    </div>
+
+    <div class="video-frame">
+      <iframe
+        src="https://www.youtube.com/embed/Cz7ylnDc9J0"
+        title="Claude Skills for High Scale Quant Workflows"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+        allowfullscreen>
+      </iframe>
+    </div>
+
+    <div class="talk-description">
+      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+      <p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+    </div>
+  </div>
+
+<script type="module">
+  import { mountHeader } from '../shared/header.js';
+  mountHeader({ active: 'talk', basePath: '' });
+</script>
+</body>
+</html>
