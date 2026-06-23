@@ -12,10 +12,10 @@ export const resumeData = {
   ],
   experience: [
     {
-      company: "MFS Investment Management - Boston, MA",
+      company: "MFS Investment Management — Boston, MA",
       roles: [
-        { title: "Quantitative Trading Specialist - Systematic Execution Team", dates: "Apr 2023 – Present" },
-        { title: "Senior Software Engineer - Systematic Execution Team",        dates: "Dec 2021 – Apr 2023" },
+        { title: "Quantitative Trading Specialist — Systematic Execution Team", dates: "Apr 2023 – Present" },
+        { title: "Senior Software Engineer — Systematic Execution Team",        dates: "Dec 2021 – Apr 2023" },
       ],
       bullets: [
         {
@@ -34,9 +34,9 @@ export const resumeData = {
     },
 
     {
-      company: "Raytheon Missile & Defense - Tewksbury, MA",
+      company: "Raytheon Missile & Defense — Tewksbury, MA",
       roles: [
-        { title: "Systems Engineer - PATRIOT Surveillance Radar", dates: "Jun 2020 – Dec 2021" },
+        { title: "Systems Engineer — PATRIOT Surveillance Radar", dates: "Jun 2020 – Dec 2021" },
       ],
       bullets: [
         {
@@ -50,7 +50,7 @@ export const resumeData = {
     },
 
     {
-      company: "The Applied Research Lab - State College, PA",
+      company: "The Applied Research Lab — State College, PA",
       roles: [
         { title: "Distinguished Undergraduate Researcher", dates: "May 2018 – May 2020" },
       ],
@@ -70,13 +70,13 @@ export const resumeData = {
       name: "Bandit2Business",
       url: "",
       dates: "",
-      description: "Multiarmed Bandit Simulator applied to B2B advertising campaigns",
+      description: "Multi-Armed Bandit Simulator applied to B2B advertising campaigns",
     },
     {
       name: "Personal Meal Planner",
       url: "",
       dates: "",
-      description: "Full stack meal planner, shopping list aggregator, and database of 10k recipes",
+      description: "Full-stack meal planner, shopping list aggregator, and database of 10k recipes",
     },
   ],
 
@@ -84,7 +84,7 @@ export const resumeData = {
     {
       institution: "The Pennsylvania State University",
       date:        "Spring 2020",
-      degree:      "BS in Mechanical Engineering - University Park, PA",
+      degree:      "BS in Mechanical Engineering — University Park, PA",
     },
   ],
 };
