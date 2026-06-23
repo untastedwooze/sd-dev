@@ -35,9 +35,6 @@
 
   --font-body: 'Inter', system-ui, -apple-system, sans-serif;
   --font-serif:'Newsreader', Georgia, serif;
-
-  /* shared header reads --font-data; map it to this page's body font */
-  --font-data: 'Inter', system-ui, -apple-system, sans-serif;
 }
 
 * { box-sizing: border-box; }
@@ -48,7 +45,7 @@ body {
   background-color: var(--color-bg);
   color: var(--ink);
   font-family: var(--font-body);
-  line-height: 1.4;
+  line-height: 1.5;
   -webkit-font-smoothing: antialiased;
   position: relative;
   padding: 28px 20px 44px;
@@ -205,7 +202,7 @@ section { margin-top: 18px; }
 /* ---------- print ---------- */
 @media print {
   @page { margin: 0.35in 0.4in; }
-  body { background: #fff; padding: 0; line-height: 1.25; }
+  body { background: #fff; padding: 0; line-height: 1.4; }
   body::before { display: none; }
   .topbar { display: none; }
   .cv-print { display: none; }
