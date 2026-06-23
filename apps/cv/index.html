@@ -161,7 +161,7 @@ section { margin-top: 18px; }
   gap: 16px;
 }
 .job-company { font-size: 0.96rem; color: var(--ink); font-weight: 600; }
-.job-title { font-size: 0.9rem; color: var(--ink-soft); margin-top: 1px; }
+.job-title { font-size: 0.9rem; color: var(--ink-soft); margin-top: 1px; font-style: italic; }
 .job-dates { font-size: 0.85rem; color: var(--ink-faint); white-space: nowrap; }
 .job ul { margin: 4px 0 0; padding-left: 19px; }
 .job li { font-size: 0.89rem; color: var(--ink-soft); margin-bottom: 3px; }
@@ -176,6 +176,21 @@ section { margin-top: 18px; }
   color: var(--ink-faint);
   margin: 7px 0 1px;
 }
+
+/* ---------- projects ---------- */
+.project-line {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 16px;
+  font-size: 0.89rem;
+  color: var(--ink-soft);
+  margin-bottom: 4px;
+}
+.project-line:last-child { margin-bottom: 0; }
+.project-line b { color: var(--ink); font-weight: 600; }
+.project-line a { color: var(--ink); text-decoration: none; }
+.project-line a:hover { color: var(--color-accent); text-decoration: underline; }
 
 /* ---------- education ---------- */
 .edu { margin-bottom: 10px; }
@@ -245,13 +260,30 @@ section { margin-top: 18px; }
     return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
   }
 
+  function bold(s) {
+    return esc(s).replace(/\*\*(.+?)\*\*/g, '<b>$1</b>');
+  }
+
   function renderBulletGroups(groups) {
     return groups.map(g => `
       <div class="bullet-group">
         ${g.group ? `<span class="bullet-group-label">${esc(g.group)}</span>` : ''}
-        <ul>${g.items.map(b => `<li>${esc(b)}</li>`).join('')}</ul>
+        <ul>${g.items.map(b => `<li>${bold(b)}</li>`).join('')}</ul>
       </div>
     `).join('');
+  }
+
+  function renderProjects(projects) {
+    return projects.map(p => {
+      const name = p.url
+        ? `<a href="https://${esc(p.url)}" target="_blank">${esc(p.name)}</a>`
+        : esc(p.name);
+      return `
+        <p class="project-line">
+          <span><i>${name}</i> - ${bold(p.description)}</span>
+          <span class="job-dates">${esc(p.dates)}</span>
+        </p>`;
+    }).join('');
   }
 
   function renderExperience(jobs) {
@@ -279,6 +311,8 @@ section { margin-top: 18px; }
       <div class="contact">
         <span class="sep">·</span>
         <a href="mailto:${esc(d.contact.email)}">${esc(d.contact.email)}</a>
+        <span class="sep">·</span>
+        <a href="https://${esc(d.contact.website)}" target="_blank">${esc(d.contact.website)}</a>
       </div>
     </header>
 
@@ -292,20 +326,25 @@ section { margin-top: 18px; }
       ${renderExperience(d.experience)}
     </section>
 
+     <section>
+      <h2 class="section-title">Personal Projects</h2>
+      ${renderProjects(d.projects)}
+    </section>   
     <section>
       <h2 class="section-title">Education</h2>
       ${d.education.map(e => `
-        <div class="edu">
-          <div class="edu-row top">
-            <b>${esc(e.institution)}</b>
-            <span class="date">${esc(e.date)}</span>
+      <div class="edu">
+        <div class="edu-row top">
+          <b>${esc(e.institution)}</b>
+          <span class="date">${esc(e.date)}</span>
           </div>
           <div class="edu-row sub">
             <span>${esc(e.degree)}</span>
-          </div>
-        </div>
-      `).join('')}
-    </section>
+            </div>
+            </div>
+            `).join('')}
+            </section>
+
   `;
 </script>
 </body>
