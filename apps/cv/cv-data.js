@@ -84,6 +84,7 @@ export const resumeData = {
     {
       institution: "The Pennsylvania State University",
       date:        "Spring 2020",
+      gpa:         "3.5",
       degree:      "BS in Mechanical Engineering — University Park, PA",
     },
   ],
